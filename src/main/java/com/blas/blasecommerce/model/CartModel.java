@@ -1,5 +1,7 @@
 package com.blas.blasecommerce.model;
 
+import com.blas.blasecommerce.entity.Cart;
+
 public class CartModel {
 
 	private String id;
@@ -17,6 +19,13 @@ public class CartModel {
 		this.productId = productId;
 		this.quantity = quantity;
 		this.username = username;
+	}
+
+	public CartModel(Cart cart) {
+		this.id = cart.getId();
+		this.productId = cart.getProductId();
+		this.quantity = cart.getQuantity();
+		this.username = cart.getUsername();
 	}
 
 	public String getId() {

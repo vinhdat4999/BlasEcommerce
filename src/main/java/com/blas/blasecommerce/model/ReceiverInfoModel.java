@@ -1,5 +1,7 @@
 package com.blas.blasecommerce.model;
 
+import com.blas.blasecommerce.entity.ReceiverInfo;
+
 public class ReceiverInfoModel {
 	private String id;
 	private String username;
@@ -21,6 +23,15 @@ public class ReceiverInfoModel {
 		this.receiverPhone = receiverPhone;
 		this.receiverEmail = receiverEmail;
 		this.receiverAddress = receiverAddress;
+	}
+
+	public ReceiverInfoModel(ReceiverInfo receiverInfo) {
+		this.id = receiverInfo.getId();
+		this.username = receiverInfo.getUsername();
+		this.receiverName = receiverInfo.getReceiverName();
+		this.receiverPhone = receiverInfo.getReceiverPhone();
+		this.receiverEmail = receiverInfo.getReceiverEmail();
+		this.receiverAddress = receiverInfo.getReceiverAddress();
 	}
 
 	public String getId() {

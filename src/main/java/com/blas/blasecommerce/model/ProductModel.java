@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.blas.blasecommerce.entity.Product;
+
 public class ProductModel {
 	private String id;
 	private String category;
@@ -27,6 +29,15 @@ public class ProductModel {
 		this.name = name;
 		this.price = price;
 		this.description = description;
+	}
+
+	public ProductModel(Product product) {
+		this.id = product.getId();
+		this.category = product.getCategory();
+		this.createDate = product.getCreateDate();
+		this.name = product.getName();
+		this.price = product.getPrice();
+		this.description = product.getDescription();
 	}
 
 	public String getId() {

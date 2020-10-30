@@ -3,6 +3,8 @@ package com.blas.blasecommerce.model;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.blas.blasecommerce.entity.Order;
+
 public class OrderModel {
 
 	private String id;
@@ -35,6 +37,20 @@ public class OrderModel {
 		this.coupon = coupon;
 		this.coins = coins;
 		this.total = total;
+	}
+
+	public OrderModel(Order order) {
+		this.id = order.getId();
+		this.username = order.getUsername();
+		this.receiverInfoId = order.getReceiverInfoId();
+		this.orderTime = order.getOrderTime();
+		this.status = order.getStatus();
+		this.expectShipDate = order.getExpectShipDate();
+		this.description = order.getDescription();
+		this.code = order.getCode();
+		this.coupon = order.getCoupon();
+		this.coins = order.getCoins();
+		this.total = order.getTotal();
 	}
 
 	public String getId() {

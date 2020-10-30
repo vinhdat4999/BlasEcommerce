@@ -1,5 +1,7 @@
 package com.blas.blasecommerce.model;
 
+import com.blas.blasecommerce.entity.Category;
+
 public class CategoryModel {
 	private String category;
 
@@ -10,6 +12,10 @@ public class CategoryModel {
 	public CategoryModel(String category) {
 		super();
 		this.category = category;
+	}
+
+	public CategoryModel(Category category) {
+		this.category = category.getCategory();
 	}
 
 	public String getCategory() {

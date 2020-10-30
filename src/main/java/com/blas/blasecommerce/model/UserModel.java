@@ -2,7 +2,9 @@ package com.blas.blasecommerce.model;
 
 import java.util.Date;
 
-public class AccountModel {
+import com.blas.blasecommerce.entity.User;
+
+public class UserModel {
 
 	private String username;
 	private String firstname;
@@ -15,11 +17,11 @@ public class AccountModel {
 	private String password;
 	private String userRole;
 
-	public AccountModel() {
+	public UserModel() {
 		super();
 	}
 
-	public AccountModel(String username, String firstname, String lastname, boolean gender, Date birthdate,
+	public UserModel(String username, String firstname, String lastname, boolean gender, Date birthdate,
 			String phoneNum, String email, boolean active, String password, String userRole) {
 		super();
 		this.username = username;
@@ -32,6 +34,19 @@ public class AccountModel {
 		this.active = active;
 		this.password = password;
 		this.userRole = userRole;
+	}
+
+	public UserModel(User user) {
+		this.username = user.getUsername();
+		this.firstname = user.getFirstname();
+		this.lastname = user.getLastname();
+		this.gender = user.isGender();
+		this.birthdate = user.getBirthdate();
+		this.phoneNum = user.getPhoneNum();
+		this.email = user.getEmail();
+		this.active = user.isActive();
+		this.password = user.getPassword();
+		this.userRole = user.getUserRole();
 	}
 
 	public String getUsername() {

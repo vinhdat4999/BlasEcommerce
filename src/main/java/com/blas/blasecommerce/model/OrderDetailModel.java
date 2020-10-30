@@ -1,5 +1,7 @@
 package com.blas.blasecommerce.model;
 
+import com.blas.blasecommerce.entity.OrderDetail;
+
 public class OrderDetailModel {
 
 	private String id;
@@ -19,6 +21,14 @@ public class OrderDetailModel {
 		this.price = price;
 		this.quanity = quanity;
 		this.orderId = orderId;
+	}
+
+	public OrderDetailModel(OrderDetail orderDetail) {
+		this.id = orderDetail.getId();
+		this.productId = orderDetail.getProductId();
+		this.price = orderDetail.getPrice();
+		this.quanity = orderDetail.getQuanity();
+		this.orderId = orderDetail.getOrderId();
 	}
 
 	public String getId() {

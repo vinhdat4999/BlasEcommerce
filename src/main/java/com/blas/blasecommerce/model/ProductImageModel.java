@@ -2,6 +2,8 @@ package com.blas.blasecommerce.model;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.blas.blasecommerce.entity.ProductImage;
+
 public class ProductImageModel {
 
 	private String id;
@@ -17,6 +19,11 @@ public class ProductImageModel {
 		this.id = id;
 		this.productId = productId;
 		this.image = image;
+	}
+
+	public ProductImageModel(ProductImage productImage) {
+		this.id = productImage.getId();
+		this.productId = productImage.getProductId();
 	}
 
 	public String getId() {
