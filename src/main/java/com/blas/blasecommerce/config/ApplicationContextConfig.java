@@ -19,8 +19,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.blas.blasecommerce.dao.ProductDAO;
+import com.blas.blasecommerce.dao.UserDAO;
+import com.blas.blasecommerce.dao.impl.ProductDAOImpl;
+import com.blas.blasecommerce.dao.impl.UserDAOImpl;
+
 @Configuration
-@ComponentScan("org.o7planning.springmvcshoppingcart.*")
+@ComponentScan("com.blas.blasecommerce.*")
 @EnableTransactionManagement
 // Load to Environment.
 @PropertySource("classpath:ds-hibernate-cfg.properties")
@@ -109,24 +114,29 @@ public class ApplicationContextConfig {
        return transactionManager;
    }
  
-   @Bean(name = "accountDAO")
-   public AccountDAO getApplicantDAO() {
-       return new AccountDAOImpl();
-   }
- 
+//   @Bean(name = "accountDAO")
+//   public AccountDAO getApplicantDAO() {
+//       return new AccountDAOImpl();
+//   }
+// 
    @Bean(name = "productDAO")
    public ProductDAO getProductDAO() {
        return new ProductDAOImpl();
    }
- 
-   @Bean(name = "orderDAO")
-   public OrderDAO getOrderDAO() {
-       return new OrderDAOImpl();
+   
+   @Bean(name = "userDAO")
+   public UserDAO getUserDAO() {
+       return new UserDAOImpl();
    }
-    
-   @Bean(name = "accountDAO")
-   public AccountDAO getAccountDAO()  {
-       return new AccountDAOImpl();
-   }
+// 
+//   @Bean(name = "orderDAO")
+//   public OrderDAO getOrderDAO() {
+//       return new OrderDAOImpl();
+//   }
+//    
+//   @Bean(name = "accountDAO")
+//   public AccountDAO getAccountDAO()  {
+//       return new AccountDAOImpl();
+//   }
  
 }

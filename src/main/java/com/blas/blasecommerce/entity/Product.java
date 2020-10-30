@@ -11,6 +11,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.blas.blasecommerce.model.ProductModel;
+
 @Entity
 @Table(name = "product")
 public class Product implements Serializable {
@@ -23,6 +25,16 @@ public class Product implements Serializable {
 	private String name;
 	private double price;
 	private String description;
+
+	public Product(ProductModel productModel) {
+		this.id = productModel.getId();
+		this.category = productModel.getCategory();
+		this.createDate = productModel.getCreateDate();
+		this.image = productModel.getImage().getBytes();
+		this.name = productModel.getName();
+		this.price = productModel.getPrice();
+		this.description = productModel.getDescription();
+	}
 
 	@Column(name = "id", length = 50, nullable = false)
 	public String getId() {

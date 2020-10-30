@@ -7,20 +7,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import com.blas.blasecommerce.authentication.AuthenticationService;
+
 @Configuration
 //@EnableWebSecurity = @EnableWebMVCSecurity + Extra features
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 @Autowired
-MyDBAuthenticationService myDBAauthenticationService;
+AuthenticationService authenticationService;
 
 @Autowired
 public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
  
     // Các User trong Database
-    auth.userDetailsService(myDBAauthenticationService);
+    auth.userDetailsService(authenticationService);
 
 }
 
