@@ -56,7 +56,6 @@ public class Order implements Serializable {
 		this.receiverInfoId = receiverInfoId;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "orderDate", nullable = false)
 	public LocalDateTime getOrderTime() {
 		return orderTime;

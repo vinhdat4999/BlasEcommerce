@@ -96,7 +96,7 @@ public class ApplicationContextConfig {
        LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
   
        // Package chứa các entity class.
-       factoryBean.setPackagesToScan(new String[] { "org.o7planning.springmvcshoppingcart.entity" });
+       factoryBean.setPackagesToScan(new String[] { "com.blas.blasecommerce.entity" });
        factoryBean.setDataSource(dataSource);
        factoryBean.setHibernateProperties(properties);
        factoryBean.afterPropertiesSet();

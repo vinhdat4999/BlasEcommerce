@@ -31,6 +31,16 @@ public class ProductModel {
 		this.description = description;
 	}
 
+	public ProductModel(String id, String category, Date createDate, String name, double price, String description) {
+		super();
+		this.id = id;
+		this.category = category;
+		this.createDate = createDate;
+		this.name = name;
+		this.price = price;
+		this.description = description;
+	}
+
 	public ProductModel(Product product) {
 		this.id = product.getId();
 		this.category = product.getCategory();

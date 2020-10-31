@@ -1,5 +1,5 @@
-<%@page import="com.blas.blasecomerce.util.NumberOfProduct"%>
-<%@page import="com.blas.blasecomerce.util.NameLogging"%>
+<%@page import="com.blas.blasecommerce.util.NumberOfProduct"%>
+<%@page import="com.blas.blasecommerce.util.NameLogging"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>

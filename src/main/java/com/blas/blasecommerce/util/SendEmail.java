@@ -1,4 +1,4 @@
-package com.blas.blasecomerce.util;
+package com.blas.blasecommerce.util;
 
 import java.util.Properties;
 
@@ -45,11 +45,11 @@ public class SendEmail {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(APP_EMAIL));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(RECEIVE_EMAIL));
-            message.setSubject("Đặt lại mật khẩu của bạn", "utf8");
+            message.setSubject("Ä�áº·t láº¡i máº­t kháº©u cá»§a báº¡n", "utf8");
 
             // 3) create MimeBodyPart object and set your message text
             MimeBodyPart messageBodyPart1 = new MimeBodyPart();
-            String s = "Mật khẩu mới tài khoản Blas của bạn là : " + code + ". Hãy đổi lại mật khẩu khác an toàn hơn";
+            String s = "Máº­t kháº©u má»›i tĂ i khoáº£n Blas cá»§a báº¡n lĂ  : " + code + ". HĂ£y Ä‘á»•i láº¡i máº­t kháº©u khĂ¡c an toĂ n hÆ¡n";
             messageBodyPart1.setText(s, "utf8");
 
             // 4) create new MimeBodyPart object and set DataHandler object to this object

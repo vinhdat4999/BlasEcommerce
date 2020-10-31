@@ -1,4 +1,4 @@
-package com.blas.blasecomerce.util;
+package com.blas.blasecommerce.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

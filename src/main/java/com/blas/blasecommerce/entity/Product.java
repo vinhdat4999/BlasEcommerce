@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -35,7 +36,8 @@ public class Product implements Serializable {
 		this.price = productModel.getPrice();
 		this.description = productModel.getDescription();
 	}
-
+	
+	@Id
 	@Column(name = "id", length = 50, nullable = false)
 	public String getId() {
 		return id;
