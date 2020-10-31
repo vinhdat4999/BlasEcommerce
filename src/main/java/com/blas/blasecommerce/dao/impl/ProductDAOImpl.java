@@ -6,12 +6,15 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.entity.Product;
 import com.blas.blasecommerce.model.PaginationResult;
 import com.blas.blasecommerce.model.ProductModel;
-
+@Transactional
+@Repository
 public class ProductDAOImpl implements ProductDAO{
 
 	@Autowired
