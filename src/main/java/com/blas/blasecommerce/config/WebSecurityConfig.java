@@ -21,7 +21,7 @@ AuthenticationService authenticationService;
 public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
  
-    // Các User trong Database
+    // CĂ¡c User trong Database
     auth.userDetailsService(authenticationService);
 
 }
@@ -32,35 +32,35 @@ protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable();
 
 
-    // Các yêu cầu phải login với vai trò EMPLOYEE hoặc MANAGER.
-    // Nếu chưa login, nó sẽ redirect tới trang /login.
+    // CĂ¡c yĂªu cáº§u pháº£i login vá»›i vai trĂ² EMPLOYEE hoáº·c MANAGER.
+    // Náº¿u chÆ°a login, nĂ³ sáº½ redirect tá»›i trang /login.
     http.authorizeRequests().antMatchers("/orderList","/order", "/accountInfo")//
-            .access("hasAnyRole('ROLE_EMPLOYEE', 'ROLE_MANAGER')");
+            .access("hasAnyRole('ROLE_ADMIN', 'ROLE_CUSTOMER')");
 
 
-    // Trang chỉ dành cho MANAGER
-    http.authorizeRequests().antMatchers("/product").access("hasRole('ROLE_MANAGER')");
+    // Trang chá»‰ dĂ nh cho MANAGER
+    http.authorizeRequests().antMatchers("/product").access("hasRole('ROLE_ADMIN')");
 
 
-    // Khi người dùng đã login, với vai trò XX.
-    // Nhưng truy cập vào trang yêu cầu vai trò YY,
-    // Ngoại lệ AccessDeniedException sẽ ném ra.
+    // Khi ngÆ°á»�i dĂ¹ng Ä‘Ă£ login, vá»›i vai trĂ² XX.
+    // NhÆ°ng truy cáº­p vĂ o trang yĂªu cáº§u vai trĂ² YY,
+    // Ngoáº¡i lá»‡ AccessDeniedException sáº½ nĂ©m ra.
     http.authorizeRequests().and().exceptionHandling().accessDeniedPage("/403");
 
 
-    // Cấu hình cho Login Form.
+    // Cáº¥u hĂ¬nh cho Login Form.
     http.authorizeRequests().and().formLogin()//
        
-            // Submit URL của trang login
+            // Submit URL cá»§a trang login
             .loginProcessingUrl("/j_spring_security_check") // Submit URL
             .loginPage("/login")//
-            .defaultSuccessUrl("/accountInfo")//
+            .defaultSuccessUrl("/")//
             .failureUrl("/login?error=true")//
-            .usernameParameter("userName")//
+            .usernameParameter("username")//
             .passwordParameter("password")
          
-            // Cấu hình cho Logout Page.
-            // (Sau khi logout, chuyển tới trang home)
+            // Cáº¥u hĂ¬nh cho Logout Page.
+            // (Sau khi logout, chuyá»ƒn tá»›i trang home)
             .and().logout().logoutUrl("/logout").logoutSuccessUrl("/");
 
 }

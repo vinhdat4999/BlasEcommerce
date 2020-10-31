@@ -34,11 +34,10 @@ public class NameLogging {
 			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			if (principal instanceof UserDetails) {
 				username = ((UserDetails) principal).getUsername();
-
 			} else {
 				username = principal.toString();
 			}
-			String sql = " select firstname, lastname from account where username = '" + username + "'";
+			String sql = " select lastname from user where username = '" + username + "'";
 			Statement sta = getConnection().createStatement();
 			ResultSet RS = sta.executeQuery(sql);
 			if (RS.next() == true) {
