@@ -24,6 +24,12 @@ public class ClientController {
 	@Autowired
 	private ProductDAO productDAO;
 	
+	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
+	public String login(Model model) {
+
+		return "login";
+	}
+	
 	@RequestMapping("/")
 	public String listProductHandler(Model model, //
 			@RequestParam(value = "name", defaultValue = "") String likeName,
@@ -46,11 +52,5 @@ public class ClientController {
 		}
 		model.addAttribute("paginationProducts", result);
 		return "productList";
-	}
-	
-	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
-	public String login(Model model) {
-
-		return "login";
 	}
 }

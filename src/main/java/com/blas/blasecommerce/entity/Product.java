@@ -27,6 +27,22 @@ public class Product implements Serializable {
 	private double price;
 	private String description;
 
+	public Product() {
+		super();
+	}
+
+	public Product(String id, String category, Date createDate, byte[] image, String name, double price,
+			String description) {
+		super();
+		this.id = id;
+		this.category = category;
+		this.createDate = createDate;
+		this.image = image;
+		this.name = name;
+		this.price = price;
+		this.description = description;
+	}
+
 	public Product(ProductModel productModel) {
 		this.id = productModel.getId();
 		this.category = productModel.getCategory();
@@ -36,7 +52,7 @@ public class Product implements Serializable {
 		this.price = productModel.getPrice();
 		this.description = productModel.getDescription();
 	}
-	
+
 	@Id
 	@Column(name = "id", length = 50, nullable = false)
 	public String getId() {

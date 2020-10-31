@@ -63,7 +63,7 @@ public class ProductDAOImpl implements ProductDAO {
 		// TODO Auto-generated method stub
 		String sql = "Select new " + ProductModel.class.getName() //
 				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description) " + " from "//
-				+ Product.class.getName() + " p where p.category='" + likeName;
+				+ Product.class.getName() + " p where p.category='" + likeName + "'";
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery(sql);
 		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
