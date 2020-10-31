@@ -6,13 +6,16 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.entity.Product;
 import com.blas.blasecommerce.model.PaginationResult;
 import com.blas.blasecommerce.model.ProductModel;
 
-public class ProductDAOImpl implements ProductDAO{
+@Transactional
+public class ProductDAOImpl implements ProductDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -47,8 +50,56 @@ public class ProductDAOImpl implements ProductDAO{
 			String likeName) {
 		// TODO Auto-generated method stub
 		String sql = "Select new " + ProductModel.class.getName() //
-				+ "(p.id, p.categoryId, p.createDate, p.name, p.price, p.unitId, p.description) " + " from "//
-				+ Product.class.getName() + " p order by p.createDate desc ";
+				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description) " + " from "//
+				+ Product.class.getName() + " p";
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery(sql);
+		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
+	}
+
+	@Override
+	public PaginationResult<ProductModel> queryProductsByCategory(int page, int maxResult, int maxNavigationPage,
+			String likeName) {
+		// TODO Auto-generated method stub
+		String sql = "Select new " + ProductModel.class.getName() //
+				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description) " + " from "//
+				+ Product.class.getName() + " p where p.category='" + likeName + "'";
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery(sql);
+		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
+	}
+
+	@Override
+	public PaginationResult<ProductModel> queryProductsByCategorySortPrice(int page, int maxResult,
+			int maxNavigationPage, String likeName, String sortType) {
+		// TODO Auto-generated method stub
+		String sql = "Select new " + ProductModel.class.getName() //
+				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description) " + " from "//
+				+ Product.class.getName() + " p where p.category='" + likeName + "' order by p.price " + sortType;
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery(sql);
+		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
+	}
+
+	@Override
+	public PaginationResult<ProductModel> searchProduct(int page, int maxResult, int maxNavigationPage,
+			String likeName) {
+		// TODO Auto-generated method stub
+		String sql = "Select new " + ProductModel.class.getName()
+				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description) " + "from "
+				+ Product.class.getName() + " p where p.name like '%" + likeName + "%' order by p.createDate desc";
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery(sql);
+		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
+	}
+
+	@Override
+	public PaginationResult<ProductModel> searchProductSortPrice(int page, int maxResult, int maxNavigationPage,
+			String likeName, String sortType) {
+		// TODO Auto-generated method stub
+		String sql = "Select new " + ProductModel.class.getName() //
+				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description) " + " from "//
+				+ Product.class.getName() + " p where p.name like '%" + likeName + "%' order by p.price " + sortType;
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery(sql);
 		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
@@ -79,82 +130,9 @@ public class ProductDAOImpl implements ProductDAO{
 			product.setPrice(productModel.getPrice());
 			product.setDescription(productModel.getDescription());
 		} else {
-			System.out.println("Product: " + product.toString());
 			sessionFactory.getCurrentSession().persist(product);
 		}
 		sessionFactory.getCurrentSession().flush();
-	}
-
-	@Override
-	public PaginationResult<ProductModel> queryProductsByCategory(int page, int maxResult, int maxNavigationPage,
-			String likeName) {
-		// TODO Auto-generated method stub
-		String sql = "Select new " + ProductModel.class.getName() //
-				+ "(p.id, p.categoryId, p.createDate, p.name, p.price, p.unitId, p.description) " + " from "//
-				+ Product.class.getName() + " p where p.categoryId='" + likeName + "' order by p.createDate desc ";
-		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery(sql);
-		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
-	}
-
-	@Override
-	public PaginationResult<ProductModel> queryProductsByCategoryPriceDes(int page, int maxResult, int maxNavigationPage,
-			String likeName) {
-		// TODO Auto-generated method stub
-		String sql = "Select new " + ProductModel.class.getName() //
-				+ "(p.id, p.categoryId, p.createDate, p.name, p.price, p.unitId, p.description) " + " from "//
-				+ Product.class.getName() + " p where p.categoryId='" + likeName + "' order by p.price desc ";
-		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery(sql);
-		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
-	}
-
-	@Override
-	public PaginationResult<ProductModel> queryProductsByCategoryPriceInc(int page, int maxResult, int maxNavigationPage,
-			String likeName) {
-		// TODO Auto-generated method stub
-		String sql = "Select new " + ProductModel.class.getName() //
-				+ "(p.id, p.categoryId, p.createDate, p.name, p.price, p.unitId, p.description) " + " from "//
-				+ Product.class.getName() + " p where p.categoryId='" + likeName + "' order by p.price";
-		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery(sql);
-		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
-	}
-
-	@Override
-	public PaginationResult<ProductModel> searchProduct(int page, int maxResult, int maxNavigationPage,
-			String likeName) {
-		// TODO Auto-generated method stub
-		String sql = "Select new " + ProductModel.class.getName() //
-				+ "(p.id, p.categoryId, p.createDate, p.name, p.price, p.unitId, p.description) " + " from "//
-				+ Product.class.getName() + " p where p.name like '%" + likeName + "%' order by p.createDate desc ";
-		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery(sql);
-		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
-	}
-
-	@Override
-	public PaginationResult<ProductModel> searchProductPriceDes(int page, int maxResult, int maxNavigationPage,
-			String likeName) {
-		// TODO Auto-generated method stub
-		String sql = "Select new " + ProductModel.class.getName() //
-				+ "(p.id, p.categoryId, p.createDate, p.name, p.price, p.unitId, p.description) " + " from "//
-				+ Product.class.getName() + " p where p.name like '%" + likeName + "%' order by p.price desc";
-		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery(sql);
-		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
-	}
-
-	@Override
-	public PaginationResult<ProductModel> searchProductPriceInc(int page, int maxResult, int maxNavigationPage,
-			String likeName) {
-		// TODO Auto-generated method stub
-		String sql = "Select new " + ProductModel.class.getName() //
-				+ "(p.id, p.categoryId, p.createDate, p.name, p.price, p.unitId, p.description) " + " from "//
-				+ Product.class.getName() + " p where p.name like '%" + likeName + "%' order by p.price";
-		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery(sql);
-		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
 	}
 
 }

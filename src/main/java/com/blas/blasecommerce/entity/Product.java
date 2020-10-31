@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -26,6 +27,22 @@ public class Product implements Serializable {
 	private double price;
 	private String description;
 
+	public Product() {
+		super();
+	}
+
+	public Product(String id, String category, Date createDate, byte[] image, String name, double price,
+			String description) {
+		super();
+		this.id = id;
+		this.category = category;
+		this.createDate = createDate;
+		this.image = image;
+		this.name = name;
+		this.price = price;
+		this.description = description;
+	}
+
 	public Product(ProductModel productModel) {
 		this.id = productModel.getId();
 		this.category = productModel.getCategory();
@@ -36,6 +53,7 @@ public class Product implements Serializable {
 		this.description = productModel.getDescription();
 	}
 
+	@Id
 	@Column(name = "id", length = 50, nullable = false)
 	public String getId() {
 		return id;

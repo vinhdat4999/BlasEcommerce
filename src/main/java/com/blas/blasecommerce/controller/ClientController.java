@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -32,12 +33,12 @@ public class ClientController {
 		final int maxNavigationPage = 10;
 		PaginationResult<ProductModel> result;
 		if (type.equals("price-inc")) {
-			result = productDAO.searchProductPriceInc(page, //
-					maxResult, maxNavigationPage, likeName);
+			result = productDAO.searchProductSortPrice(page, //
+					maxResult, maxNavigationPage, likeName, "asc");
 		} else {
 			if (type.equals("price-des")) {
-				result = productDAO.searchProductPriceDes(page, //
-						maxResult, maxNavigationPage, likeName);
+				result = productDAO.searchProductSortPrice(page, //
+						maxResult, maxNavigationPage, likeName, "desc");
 			} else {
 				result = productDAO.searchProduct(page, //
 						maxResult, maxNavigationPage, likeName);
