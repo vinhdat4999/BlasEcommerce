@@ -86,7 +86,7 @@ public class CartDAOImpl implements CartDAO {
 		String sql = "delete from " + Cart.class.getName() + " where id='" + id + "'";
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery(sql);
-		query.executeUpdate();	
+		query.executeUpdate();
 	}
 
 	@Override
@@ -112,6 +112,15 @@ public class CartDAOImpl implements CartDAO {
 			amountList.add(total);
 		}
 		return amountList;
+	}
+
+	@Override
+	public void deleteAllItemsInCartByUser(String username) {
+		// TODO Auto-generated method stub
+		String sql = "delete from " + Cart.class.getName() + " where username ='" + username + "'";
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery(sql);
+		query.executeUpdate();
 	}
 
 }

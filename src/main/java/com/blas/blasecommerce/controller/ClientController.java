@@ -43,7 +43,7 @@ public class ClientController {
 
 	@Autowired
 	private UserDAO userDAO;
-	
+
 	@Autowired
 	private OrderDAO orderDAO;
 
@@ -216,6 +216,23 @@ public class ClientController {
 		}
 	}
 
+	@RequestMapping(value = { "/shoppingCartFinalize" }, method = RequestMethod.GET)
+	public String shoppingCartFinalize(HttpServletRequest request, Model model) {
+
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		List<CartModel> itemList = cartDAO.getAllItemInCartByUser(username);
+		if (itemList.size() == 0) {
+			return "redirect:/cart";
+		}
+		cartDAO.deleteAllItemsInCartByUser(username);
+		return "shoppingCartFinalize";
+	}
 
 	public static boolean isStringIsDoubleNumber(String s) {
 		try {

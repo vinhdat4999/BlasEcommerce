@@ -12,4 +12,5 @@ public interface CartDAO {
 	public void deleteItemInCart(String id);
 	public double getTotalAmount(String username);
 	public List<Double> getTotalAmountItem(String username);
+	public void deleteAllItemsInCartByUser(String username);
 }
