@@ -15,7 +15,7 @@ public class OrderDetail implements Serializable {
 	private String id;
 	private String productId;
 	private double price;
-	private int quanity;
+	private int quantity;
 	private String orderId;
 
 	@Id
@@ -46,13 +46,13 @@ public class OrderDetail implements Serializable {
 		this.price = price;
 	}
 
-	@Column(name = "quanity", nullable = false)
-	public int getQuanity() {
-		return quanity;
+	@Column(name = "quantity", nullable = false)
+	public int getQuantity() {
+		return quantity;
 	}
 
-	public void setQuanity(int quanity) {
-		this.quanity = quanity;
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 	@Column(name = "orderId", length = 50, nullable = false)
@@ -66,7 +66,7 @@ public class OrderDetail implements Serializable {
 
 	@Override
 	public String toString() {
-		return "OrderDetail [id=" + id + ", productId=" + productId + ", price=" + price + ", quanity=" + quanity
+		return "OrderDetail [id=" + id + ", productId=" + productId + ", price=" + price + ", quantity=" + quantity
 				+ ", orderId=" + orderId + "]";
 	}
 

@@ -59,7 +59,7 @@ public class OrderDAOImpl implements OrderDAO {
 			orderDetail.setId(UUID.randomUUID().toString());
 			orderDetail.setProductId(cartInfo.getProductId());
 			orderDetail.setPrice(productModel.getPrice());
-			orderDetail.setQuanity(cartInfo.getQuantity());
+			orderDetail.setQuantity(cartInfo.getQuantity());
 			orderDetail.setOrderId(orderId);
 			session.persist(orderDetail);
 			total += productModel.getPrice() * cartInfo.getQuantity();

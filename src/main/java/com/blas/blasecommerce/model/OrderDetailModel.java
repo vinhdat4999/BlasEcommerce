@@ -7,19 +7,19 @@ public class OrderDetailModel {
 	private String id;
 	private String productId;
 	private double price;
-	private int quanity;
+	private int quantity;
 	private String orderId;
 
 	public OrderDetailModel() {
 		super();
 	}
 
-	public OrderDetailModel(String id, String productId, double price, int quanity, String orderId) {
+	public OrderDetailModel(String id, String productId, double price, int quantity, String orderId) {
 		super();
 		this.id = id;
 		this.productId = productId;
 		this.price = price;
-		this.quanity = quanity;
+		this.quantity = quantity;
 		this.orderId = orderId;
 	}
 
@@ -27,7 +27,7 @@ public class OrderDetailModel {
 		this.id = orderDetail.getId();
 		this.productId = orderDetail.getProductId();
 		this.price = orderDetail.getPrice();
-		this.quanity = orderDetail.getQuanity();
+		this.quantity = orderDetail.getQuantity();
 		this.orderId = orderDetail.getOrderId();
 	}
 
@@ -55,12 +55,12 @@ public class OrderDetailModel {
 		this.price = price;
 	}
 
-	public int getQuanity() {
-		return quanity;
+	public int getQuantity() {
+		return quantity;
 	}
 
-	public void setQuanity(int quanity) {
-		this.quanity = quanity;
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 	public String getOrderId() {
@@ -73,7 +73,7 @@ public class OrderDetailModel {
 
 	@Override
 	public String toString() {
-		return "OrderDetailModel [id=" + id + ", productId=" + productId + ", price=" + price + ", quanity=" + quanity
+		return "OrderDetailModel [id=" + id + ", productId=" + productId + ", price=" + price + ", quantity=" + quantity
 				+ ", orderId=" + orderId + "]";
 	}
 

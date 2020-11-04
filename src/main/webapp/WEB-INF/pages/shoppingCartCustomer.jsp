@@ -50,11 +50,11 @@ body {
                <td><form:errors path="phoneNum" class="error-message" />${phoneError}</td>
            </tr>
  
-           <tr>
+           <%-- <tr>
                <td>Address *</td>
                <td><form:input path="addressId" /></td>
                <td><form:errors path="addressId" class="error-message" />${addressError}</td>
-           </tr>
+           </tr> --%>
  
            <tr>
                <td>&nbsp;</td>
@@ -62,7 +62,7 @@ body {
        </table>
             
       <a class="navi-item"
-          href="${pageContext.request.contextPath}/shoppingCart">Edit Cart
+          href="${pageContext.request.contextPath}/cart">Edit Cart
       </a>
       <!-- Send/Save -->
       <input type="submit" value="Send" class="button-send-sc" />
@@ -75,8 +75,8 @@ body {
               <ul>
 	               <fmt:parseNumber var="priceValue" integerOnly="true" 
 	                       type="number" value="${item.price}" />
-	               <fmt:parseNumber var="quanityValue" integerOnly="true" 
-	                       type="number" value="${item.quanity}" />
+	               <fmt:parseNumber var="quantityValue" integerOnly="true" 
+	                       type="number" value="${item.quantity}" />
                   <li><img class="product-image"
                       src="${pageContext.request.contextPath}/productImage?id=${item.productId}" /></li>
                   <li>${item.productName}</li>
