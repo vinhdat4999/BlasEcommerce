@@ -23,8 +23,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.entity.Product;
-import com.blas.blasecommerce.model.CartInfoDetail;
+import com.blas.blasecommerce.model.CartDetailModel;
 import com.blas.blasecommerce.model.CartModel;
+import com.blas.blasecommerce.model.OrderDetailModel;
 import com.blas.blasecommerce.model.PaginationResult;
 import com.blas.blasecommerce.model.ProductModel;
 
@@ -96,14 +97,14 @@ public class SystemController {
 		} else {
 			username = principal.toString();
 		}
-		List<CartModel> itemList = cartDAO.getAllCartByUser(username);
-		List<CartInfoDetail> detailList = new ArrayList<CartInfoDetail>();
-		for (CartInfo i : itemList) {
-			CartInfoDetail temp = new CartInfoDetail(i.getId(), i.getProductId(), "", i.getQuanity(), 0,
+		List<CartModel> itemList = cartDAO.getAllItemInCartByUser(username);
+		List<CartDetailModel> detailList = new ArrayList<CartDetailModel>();
+		for (CartModel i : itemList) {
+			CartDetailModel temp = new CartDetailModel(i.getId(), i.getProductId(), "", i.getQuantity(), 0,
 					i.getUsername());
-			ProductInfo productInfo = productDAO.findProductInfo(i.getProductId());
-			temp.setProductName(productInfo.getName());
-			temp.setPrice(productInfo.getPrice());
+			ProductModel productModel = productDAO.findProductModel(i.getProductId());
+			temp.setProductName(productModel.getName());
+			temp.setPrice(productModel.getPrice());
 			detailList.add(temp);
 		}
 		model.addAttribute("detailList", detailList);
@@ -112,7 +113,7 @@ public class SystemController {
 
 	@RequestMapping(value = { "/cart" }, method = RequestMethod.POST)
 	public String shoppingCartUpdateQty(HttpServletRequest request, //
-			Model model, @ModelAttribute("detailList") @Validated CartInfoDetail detailList) {
+			Model model, @ModelAttribute("detailList") @Validated CartDetailModel detailList) {
 		String username = "";
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof UserDetails) {
