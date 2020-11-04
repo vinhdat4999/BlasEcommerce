@@ -199,11 +199,11 @@ function  validation(){
 					</div>
 				</c:if>
 				<div id="div2" align="right">
-					<a href="${pageContext.request.contextPath}/shoppingCart"><img
+					<a href="${pageContext.request.contextPath}/cart"><img
 						height="50" src="<c:url value='/images/cart.png'/>" /></a>
 					<%
 						String numbersOfProductInCart = new NumberOfProduct().getNumbersOfProductInCart() + "";
-					pageContext.setAttribute("numbersOfProductInCart", numbersOfProductInCart);
+						pageContext.setAttribute("numbersOfProductInCart", numbersOfProductInCart);
 					%>
 					<span class="badge">${numbersOfProductInCart}</span>
 				</div>

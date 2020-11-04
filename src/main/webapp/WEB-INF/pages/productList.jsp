@@ -224,7 +224,7 @@ li a:hover:not(.active) {
 								<fmt:parseNumber var="intValue" integerOnly="true" type="number"
 									value="${prodInfo.price}" />
 								<li><c:out value="${intValue}" /> đ</li>
-								<security:authorize access="hasRole('ROLE_MANAGER')">
+								<security:authorize access="hasRole('ROLE_ADMIN')">
 									<div style="margin-top: 50px;" class="action">
 										<a class="add-to-cart btn btn-default"
 											href="${pageContext.request.contextPath}/editProduct?id=${prodInfo.id}">Sửa</a>

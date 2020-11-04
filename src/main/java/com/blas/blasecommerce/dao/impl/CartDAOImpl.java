@@ -1,10 +1,15 @@
 package com.blas.blasecommerce.dao.impl;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +28,9 @@ public class CartDAOImpl implements CartDAO {
 
 	@Autowired
 	private ProductDAO productDAO;
+
+	@Autowired
+	private CartDAO cartDAO;
 
 	@Override
 	public List<CartModel> getAllItemInCartByUser(String username) {
@@ -46,6 +54,37 @@ public class CartDAOImpl implements CartDAO {
 			Query query = session.createQuery(sql);
 			query.executeUpdate();
 		}
+	}
+
+	@Override
+	public void updateItemInCart(String productId, int quantity, String username) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(Cart.class);
+		Criterion usernameCrit = Restrictions.eq("username", username);
+		Criterion productIdCrit = Restrictions.eq("productId", productId);
+		LogicalExpression andExp = Restrictions.and(usernameCrit, productIdCrit);
+		criteria.add(andExp);
+		Cart cart = (Cart) criteria.uniqueResult();
+		if (cart == null) {
+			String id = UUID.randomUUID().toString();
+			CartModel cartModel = new CartModel(id, productId, quantity, username);
+			session.persist(new Cart(cartModel));
+		} else {
+			String sql = "UPDATE " + Cart.class.getName() + " set quantity = " + (cart.getQuantity() + quantity)
+					+ " WHERE username = '" + username + "' and productId= '" + productId + "'";
+			Query query = session.createQuery(sql);
+			query.executeUpdate();
+		}
+	}
+
+	@Override
+	public void deleteItemInCart(String id) {
+		// TODO Auto-generated method stub
+		String sql = "delete from " + Cart.class.getName() + " where id='" + id + "'";
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery(sql);
+		query.executeUpdate();	
 	}
 
 }

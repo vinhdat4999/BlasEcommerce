@@ -99,7 +99,7 @@ body {
 								<div>
 									<button name="btnDes" onclick="return desItem()">-</button>
 									<input type="text" name="quanityItem" id="quanityItem"
-										value="1" />
+										value="${item.quantity}" />
 									<button name="btnInc" onclick="return incItem()">+</button>
 								</div>
 							</div>

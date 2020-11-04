@@ -19,8 +19,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.dao.UserDAO;
+import com.blas.blasecommerce.dao.impl.CartDAOImpl;
 import com.blas.blasecommerce.dao.impl.ProductDAOImpl;
 import com.blas.blasecommerce.dao.impl.UserDAOImpl;
 
@@ -30,8 +32,6 @@ import com.blas.blasecommerce.dao.impl.UserDAOImpl;
 // Load to Environment.
 @PropertySource("classpath:ds-hibernate-cfg.properties")
 public class ApplicationContextConfig {
- 
-  
  
    // Lưu trữ các giá thuộc tính load bởi @PropertySource.
    @Autowired
@@ -68,16 +68,10 @@ public class ApplicationContextConfig {
    @Bean(name = "dataSource")
    public DataSource getDataSource() {
        DriverManagerDataSource dataSource = new DriverManagerDataSource();
- 
-  
-       // Xem: ds-hibernate-cfg.properties
        dataSource.setDriverClassName(env.getProperty("ds.database-driver"));
        dataSource.setUrl(env.getProperty("ds.url"));
        dataSource.setUsername(env.getProperty("ds.username"));
        dataSource.setPassword(env.getProperty("ds.password"));
-        
-       System.out.println("## getDataSource: " + dataSource);
-        
        return dataSource;
    }
  
@@ -102,7 +96,6 @@ public class ApplicationContextConfig {
        factoryBean.afterPropertiesSet();
        //
        SessionFactory sf = factoryBean.getObject();
-       System.out.println("## getSessionFactory: " + sf);
        return sf;
    }
  
@@ -127,6 +120,11 @@ public class ApplicationContextConfig {
    @Bean(name = "userDAO")
    public UserDAO getUserDAO() {
        return new UserDAOImpl();
+   }
+   	
+   @Bean(name = "cartDAO")
+   public CartDAO getCartDAO() {
+       return new CartDAOImpl();
    }
 // 
 //   @Bean(name = "orderDAO")

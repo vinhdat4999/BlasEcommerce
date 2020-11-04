@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.blas.blasecommerce.model.CartModel;
+
 @Entity
 @Table(name = "cart")
 public class Cart implements Serializable {
@@ -16,6 +18,25 @@ public class Cart implements Serializable {
 	private String productId;
 	private int quantity;
 	private String username;
+	
+	public Cart() {
+		super();
+	}
+
+	public Cart(String id, String productId, int quantity, String username) {
+		super();
+		this.id = id;
+		this.productId = productId;
+		this.quantity = quantity;
+		this.username = username;
+	}
+	
+	public Cart(CartModel cartModel) {
+		this.id = cartModel.getId();
+		this.productId = cartModel.getProductId();
+		this.quantity = cartModel.getQuantity();
+		this.username = cartModel.getUsername();
+	}
 
 	@Id
 	@Column(name = "id", length = 50, nullable = false)

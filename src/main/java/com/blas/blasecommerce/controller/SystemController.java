@@ -22,12 +22,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
+import com.blas.blasecommerce.dao.UserDAO;
 import com.blas.blasecommerce.entity.Product;
 import com.blas.blasecommerce.model.CartDetailModel;
 import com.blas.blasecommerce.model.CartModel;
 import com.blas.blasecommerce.model.OrderDetailModel;
 import com.blas.blasecommerce.model.PaginationResult;
 import com.blas.blasecommerce.model.ProductModel;
+import com.blas.blasecommerce.model.UserModel;
 
 @Controller
 @Transactional
@@ -40,6 +42,9 @@ public class SystemController {
 	@Autowired
 	private CartDAO cartDAO;
 	
+	@Autowired
+	private UserDAO userDAO;
+	
 	@RequestMapping("/403")
 	public String accessDenied() {
 		return "/403";
@@ -48,6 +53,14 @@ public class SystemController {
 	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
 	public String login(Model model) {
 		return "login";
+	}
+
+	@RequestMapping(value = { "/accountInfo" }, method = RequestMethod.GET)
+	public String accountInfo(Model model) {
+		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserModel userModel = userDAO.findUserModel(userDetails.getUsername());
+		model.addAttribute("user", userModel);
+		return "accountInfo";
 	}
 
 	@RequestMapping(value = { "/productImage" }, method = RequestMethod.GET)
@@ -130,4 +143,6 @@ public class SystemController {
 		cartDAO.updateQuantityInCart(quantityInt, username);
 		return "redirect:/shoppingCart";
 	}
+	
+	
 }
