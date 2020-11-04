@@ -12,8 +12,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "order")
-public class Order implements Serializable {
+@Table(name = "orders")
+public class Orders implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private String id;
@@ -56,7 +56,7 @@ public class Order implements Serializable {
 		this.receiverInfoId = receiverInfoId;
 	}
 
-	@Column(name = "orderDate", nullable = false)
+	@Column(name = "orderTime", nullable = false)
 	public LocalDateTime getOrderTime() {
 		return orderTime;
 	}

@@ -49,7 +49,7 @@ public class CartDAOImpl implements CartDAO {
 		Session session = sessionFactory.getCurrentSession();
 		List<CartModel> cartList = getAllItemInCartByUser(username);
 		for (int i = 0; i < cartList.size(); i++) {
-			String sql = "UPDATE " + Cart.class.getName() + " set quanity = " + quantity[i] + " WHERE username = '"
+			String sql = "UPDATE " + Cart.class.getName() + " set quantity = " + quantity[i] + " WHERE username = '"
 					+ username + "' and productId= '" + cartList.get(i).getProductId() + "'";
 			Query query = session.createQuery(sql);
 			query.executeUpdate();

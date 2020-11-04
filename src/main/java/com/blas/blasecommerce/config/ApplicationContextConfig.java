@@ -20,9 +20,11 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.blas.blasecommerce.dao.CartDAO;
+import com.blas.blasecommerce.dao.OrderDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.dao.UserDAO;
 import com.blas.blasecommerce.dao.impl.CartDAOImpl;
+import com.blas.blasecommerce.dao.impl.OrderDAOImpl;
 import com.blas.blasecommerce.dao.impl.ProductDAOImpl;
 import com.blas.blasecommerce.dao.impl.UserDAOImpl;
 
@@ -126,11 +128,11 @@ public class ApplicationContextConfig {
    public CartDAO getCartDAO() {
        return new CartDAOImpl();
    }
-// 
-//   @Bean(name = "orderDAO")
-//   public OrderDAO getOrderDAO() {
-//       return new OrderDAOImpl();
-//   }
+ 
+   @Bean(name = "orderDAO")
+   public OrderDAO getOrderDAO() {
+       return new OrderDAOImpl();
+   }
 //    
 //   @Bean(name = "accountDAO")
 //   public AccountDAO getAccountDAO()  {
