@@ -1,6 +1,14 @@
 package com.blas.blasecommerce.controller;
 
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -9,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.dao.UserDAO;
 import com.blas.blasecommerce.model.PaginationResult;
+import com.blas.blasecommerce.model.ProductImageModel;
 import com.blas.blasecommerce.model.ProductModel;
 
 @Controller
@@ -19,7 +29,7 @@ import com.blas.blasecommerce.model.ProductModel;
 @EnableWebMvc
 public class ClientController {
 	@Autowired
-	private UserDAO userDAO;
+	private CartDAO cartDAO;
 	
 	@Autowired
 	private ProductDAO productDAO;
@@ -46,5 +56,53 @@ public class ClientController {
 		}
 		model.addAttribute("paginationProducts", result);
 		return "productList";
+	}
+	
+	@RequestMapping(value = { "/product" }, method = RequestMethod.GET)
+	public String product(HttpServletRequest request, HttpServletResponse response, Model model,
+			@RequestParam("id") String id) throws IOException {
+		ProductModel productModel = null;
+		if (id != null) {
+			productModel = this.productDAO.findProductModel(id);
+		}
+		if (productModel != null) {
+			String priceStr = String.format("%,d", (int) productModel.getPrice());
+//			List<ProductImageModel> listLink = productImageDAO.getListLinkImage(id);
+//			if (listLink.size() > 0) {
+//				listLink.remove(0);
+//			}
+//			model.addAttribute("listLink", listLink);
+			model.addAttribute("price", priceStr);
+			model.addAttribute("productInfo", productModel);
+		}
+		return "product";
+	}
+	@RequestMapping(value = { "/product" }, method = RequestMethod.POST)
+	public String buyProduct(HttpServletRequest request, Model model,
+			@RequestParam(value = "id", defaultValue = "") String id) {
+
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+
+		} else {
+			username = principal.toString();
+		}
+		int quanity = 0;
+		if (request.getParameter("quanityItem") == null) {
+			quanity = 1;
+		} else {
+			quanity = Integer.parseInt(request.getParameter("quanityItem"));
+		}
+		cartDAO.updateItemInCart(id, quanity, username);
+		return "redirect:/cart";
+	}
+
+	@RequestMapping({ "/shoppingCartRemoveProduct" })
+	public String removeProductHandler(HttpServletRequest request, Model model, //
+			@RequestParam(value = "id", defaultValue = "") String id) {
+		cartDAO.deleteItemInCart(id);
+		return "redirect:/cart";
 	}
 }

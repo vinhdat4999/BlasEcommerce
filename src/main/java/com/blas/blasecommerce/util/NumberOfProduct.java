@@ -38,11 +38,11 @@ public class NumberOfProduct {
 			} else {
 				username = principal.toString();
 			}
-			String sql = " select quanity from cart where username = '" + username + "'";
+			String sql = " select quantity from cart where username = '" + username + "'";
 			Statement sta = getConnection().createStatement();
 			ResultSet RS = sta.executeQuery(sql);
 			while(RS.next() == true) {
-				numberOfProduct+=RS.getInt("quanity");
+				numberOfProduct+=RS.getInt("quantity");
 			}
 			sta.close();
 			closeConnection();
