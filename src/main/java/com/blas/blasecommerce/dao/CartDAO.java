@@ -10,4 +10,6 @@ public interface CartDAO {
 	public void updateQuantityInCart(int[] quanitity, String username);
 	public void updateItemInCart(String productId, int quantity, String username);
 	public void deleteItemInCart(String id);
+	public double getTotalAmount(String username);
+	public List<Double> getTotalAmountItem(String username);
 }

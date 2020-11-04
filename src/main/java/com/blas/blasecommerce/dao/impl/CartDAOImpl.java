@@ -1,5 +1,6 @@
 package com.blas.blasecommerce.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.entity.Cart;
 import com.blas.blasecommerce.model.CartModel;
+import com.blas.blasecommerce.model.ProductModel;
 
 @Transactional
 @Repository
@@ -85,6 +87,31 @@ public class CartDAOImpl implements CartDAO {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery(sql);
 		query.executeUpdate();	
+	}
+
+	@Override
+	public double getTotalAmount(String username) {
+		// TODO Auto-generated method stub
+		double total = 0;
+		List<CartModel> cartList = getAllItemInCartByUser(username);
+		for (CartModel i : cartList) {
+			ProductModel productModel = productDAO.findProductModel(i.getProductId());
+			total += productModel.getPrice() * i.getQuantity();
+		}
+		return total;
+	}
+
+	@Override
+	public List<Double> getTotalAmountItem(String username) {
+		// TODO Auto-generated method stub
+		List<Double> amountList = new ArrayList<Double>();
+		List<CartModel> cartList = getAllItemInCartByUser(username);
+		for (CartModel i : cartList) {
+			ProductModel productInfo = productDAO.findProductModel(i.getProductId());
+			double total = productInfo.getPrice() * i.getQuantity();
+			amountList.add(total);
+		}
+		return amountList;
 	}
 
 }
