@@ -21,12 +21,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.blas.blasecommerce.dao.CartDAO;
+import com.blas.blasecommerce.dao.OrderDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.dao.UserDAO;
 import com.blas.blasecommerce.entity.Product;
 import com.blas.blasecommerce.model.CartDetailModel;
 import com.blas.blasecommerce.model.CartModel;
 import com.blas.blasecommerce.model.OrderDetailModel;
+import com.blas.blasecommerce.model.OrderModel;
 import com.blas.blasecommerce.model.PaginationResult;
 import com.blas.blasecommerce.model.ProductModel;
 import com.blas.blasecommerce.model.UserModel;
@@ -44,6 +46,9 @@ public class SystemController {
 	
 	@Autowired
 	private UserDAO userDAO;
+	
+	@Autowired
+	private OrderDAO orderDAO;
 	
 	@RequestMapping("/403")
 	public String accessDenied() {
@@ -134,15 +139,39 @@ public class SystemController {
 		} else {
 			username = principal.toString();
 		}
-		String[] quantityString = request.getParameterValues("quantity");
+		String[] quantityString = request.getParameterValues("quantityItem");
 		int[] quantityInt = new int[quantityString.length];
 		for (int i = 0; i < quantityString.length; i++) {
 			int temp = Integer.parseInt(quantityString[i]);
 			quantityInt[i] = temp;
 		}
 		cartDAO.updateQuantityInCart(quantityInt, username);
-		return "redirect:/shoppingCart";
+		return "redirect:/cart";
 	}
 	
-	
+
+	@RequestMapping(value = { "/orderList" }, method = RequestMethod.GET)
+	public String orderList(Model model, //
+			@RequestParam(value = "page", defaultValue = "1") String pageStr) {
+		int page = 1;
+		try {
+			page = Integer.parseInt(pageStr);
+		} catch (Exception e) {
+		}
+		final int MAX_RESULT = 5;
+		final int MAX_NAVIGATION_PAGE = 10;
+
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		PaginationResult<OrderModel> paginationResult //
+				= orderDAO.listOrderModelByUser(page, MAX_RESULT, MAX_NAVIGATION_PAGE, username);
+
+		model.addAttribute("paginationResult", paginationResult);
+		return "orderList";
+	}
 }

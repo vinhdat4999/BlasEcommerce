@@ -64,7 +64,7 @@ body {
 	<c:if test="${not empty detailList}">
 		<form:form method="POST" modelAttribute="detailList"
 			style="padding:50px;"
-			action="${pageContext.request.contextPath}/shoppingCart">
+			action="${pageContext.request.contextPath}/cart">
 			<div style="background-color: white;">
 				<c:forEach items="${detailList}" var="item" varStatus="varStatus">
 					<!-- <div class="product-preview-container"> -->
@@ -98,7 +98,7 @@ body {
 									value="${item.quanity}" /> --%>
 								<div>
 									<button name="btnDes" onclick="return desItem()">-</button>
-									<input type="text" name="quanityItem" id="quanityItem"
+									<input type="text" name="quantityItem" id="quantityItem"
 										value="${item.quantity}" />
 									<button name="btnInc" onclick="return incItem()">+</button>
 								</div>

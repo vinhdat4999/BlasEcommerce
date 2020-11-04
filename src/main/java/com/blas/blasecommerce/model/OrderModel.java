@@ -3,7 +3,7 @@ package com.blas.blasecommerce.model;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-import com.blas.blasecommerce.entity.Order;
+import com.blas.blasecommerce.entity.Orders;
 
 public class OrderModel {
 
@@ -39,7 +39,7 @@ public class OrderModel {
 		this.total = total;
 	}
 
-	public OrderModel(Order order) {
+	public OrderModel(Orders order) {
 		this.id = order.getId();
 		this.username = order.getUsername();
 		this.receiverInfoId = order.getReceiverInfoId();
