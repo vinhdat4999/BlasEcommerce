@@ -46,12 +46,10 @@ body {
        <c:forEach items="${paginationResult.list}" var="orderInfo">
            <tr>
                <td>${orderInfo.id}</td>
-               <td>
-                  <fmt:formatDate value="${orderInfo.orderDate}" pattern="dd-MM-yyyy HH:mm"/>
-               </td>
-               <td>${orderInfo.receiverName}</td>
+               <td>${orderInfo.orderTime}</td>
+               <%-- <td>${orderInfo.receiverName}</td>
                <td>${orderInfo.receiverAddressId}</td>
-               <td>${orderInfo.receiverEmail}</td>
+               <td>${orderInfo.receiverEmail}</td> --%>
                <fmt:parseNumber var="intValue" integerOnly="true" 
                        type="number" value="${orderInfo.total}" />
                <td><c:out value = "${intValue}" /> đ</td>
