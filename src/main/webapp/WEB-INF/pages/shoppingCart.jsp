@@ -25,26 +25,32 @@
 	font-weight: bold;
 }
 
+.total {
+	color: red;
+	font-size: 25px;
+	margin-left: auto;
+	margin-right: 82px;
+}
+
 body {
 	background-color: #8080801a;
 	font-family: 'open sans';
 	overflow-x: hidden;
 }
+
+#btnCustom {
+	text-decoration: none;
+	background: #ccc;
+	padding: 3px 10px;
+	border: none;
+	font-weight: bold;
+	color: #fff;
+}
 </style>
 <script type="text/javascript">
-	function desItem() {
-		var quanityItem = document.getElementById("quanityItem").value;
-		if (quanityItem > 1) {
-			quanityItem--;
-		}
-		document.getElementById("quanityItem").value = quanityItem;
-		return false;
-	}
-	function incItem() {
-		var quanityItem = document.getElementById("quanityItem").value;
-		quanityItem++;
-		document.getElementById("quanityItem").value = quanityItem;
-		return false;
+	function update() {
+		console.log("ds");
+		document.getElementById("cartForm").submit();
 	}
 </script>
 </head>
@@ -62,58 +68,81 @@ body {
 	</c:if>
 
 	<c:if test="${not empty detailList}">
-		<form:form method="POST" modelAttribute="detailList"
+		<form:form method="POST" modelAttribute="detailList" id="cartForm"
 			style="padding:50px;"
 			action="${pageContext.request.contextPath}/cart">
-			<div style="background-color: white;">
-				<c:forEach items="${detailList}" var="item" varStatus="varStatus">
-					<!-- <div class="product-preview-container"> -->
-					<div class="product-preview-shopping-cart-container">
-						<%-- <a id="linkp"
+			<div style="display: flex;">
+				<div style="width: 64%; background-color: white;">
+					<c:forEach items="${detailList}" var="item" varStatus="varStatus">
+						<!-- <div class="product-preview-container"> -->
+						<div class="product-preview-shopping-cart-container">
+							<%-- <a id="linkp"
 						href="${pageContext.request.contextPath}/product?id=${item.productId}"> --%>
 
-						<div style="display: flex;">
-							<div>
-								<a id="linkp"
-									href="${pageContext.request.contextPath}/product?id=${item.productId}">
-									<img
-									src="${pageContext.request.contextPath}/productImage?id=${item.productId}" />
-								</a>
-							</div>
-							<div style="display: inline-block;"></div>
-							<div style="margin-left: 30px; display: grid;">
-								<a id="linkp"
-									href="${pageContext.request.contextPath}/product?id=${item.productId}">
-									${item.productName} </a> <a class="btnDelete"
-									href="${pageContext.request.contextPath}/shoppingCartRemoveProduct?id=${item.id}">Delete
-								</a>
-							</div>
-						</div>
-						<div style="margin-left: auto; margin-right: 5%; display: flex;">
-							<fmt:parseNumber var="price" integerOnly="true" type="number"
-								value="${item.price}" />
-							<div style="font-weight: bold; margin-right: 50px;">${price}đ</div>
-							<div>
-								<%-- Quantity<input id="quantity" name="quantity" type="text"
-									value="${item.quanity}" /> --%>
+							<div style="display: flex;">
 								<div>
-									<button name="btnDes" onclick="return desItem()">-</button>
-									<input type="text" name="quantityItem" id="quantityItem"
-										value="${item.quantity}" />
-									<button name="btnInc" onclick="return incItem()">+</button>
+									<a id="linkp"
+										href="${pageContext.request.contextPath}/product?id=${item.productId}">
+										<img
+										src="${pageContext.request.contextPath}/productImage?id=${item.productId}" />
+									</a>
+								</div>
+								<div style="display: inline-block;"></div>
+								<div style="margin-left: 30px; display: grid;">
+									<a id="linkp"
+										href="${pageContext.request.contextPath}/product?id=${item.productId}">
+										${item.productName} </a> <a class="btnDelete"
+										href="${pageContext.request.contextPath}/shoppingCartRemoveProduct?id=${item.id}">Delete
+									</a>
+								</div>
+							</div>
+							<div style="margin-left: auto; margin-right: 5%; display: flex;">
+								<fmt:parseNumber var="price" integerOnly="true" type="number"
+									value="${item.price}" />
+								<div style="font-weight: bold; margin-right: 50px;">${price}đ</div>
+								<div>
+									<div>
+										<a id="btnCustom"
+											href="${pageContext.request.contextPath}/desItem?id=${item.id}">-</a>
+										<input type="text" name="quantityItem" id="quantityItem"
+											value="${item.quantity}" onblur="update()" /> <a
+											id="btnCustom"
+											href="${pageContext.request.contextPath}/incItem?id=${item.id}">+</a>
+									</div>
 								</div>
 							</div>
 						</div>
+					</c:forEach>
+				</div>
+				<div style="width: 2%"></div>
+				<div style="width: 34%; background-color: white;">
+					<div style="height: 200px;">
+						<div style="display: flex; padding: 10px;">
+							<div style="margin-left: 10px;">Thông tin nhận hàng</div>
+							<div style="margin-left: auto; margin-right: 10px;">
+								<a style="text-decoration: none;"
+									href="${pageContext.request.contextPath}/shipping">Thay đổi</a>
+							</div>
+						</div>
+						<div style="margin: 50px;">
+							<div style="text-align: center;font-weight: bold;">${receiverInfo.receiverName} | ${receiverInfo.receiverPhone}</div>
+							<div style="margin-top: 10px;">${receiverInfo.receiverAddress}</div>
+						</div>
 					</div>
-				</c:forEach>
+					<div
+						style="background-color: #f2f2f2; height: 15px; width: initial;"></div>
+					<div style="display: flex; margin-top: 50px;">
+						<div style="margin-left: 100px">Thành tiền</div>
+						<div class="total">${total}đ</div>
+					</div>
+					<div style="margin-top: 120px;">
+						<a class="btn-confirm-order"
+							href="${pageContext.request.contextPath}/shoppingCartCustomer">Tiến
+							hành đặt hàng</a>
+					</div>
+				</div>
 			</div>
 			<div style="clear: both"></div>
-			<input class="button-update-sc" type="submit" value="Update Quantity" />
-			<a class="navi-item"
-				href="${pageContext.request.contextPath}/shoppingCartCustomer">Enter
-				Customer Info</a>
-			<a class="navi-item" href="${pageContext.request.contextPath}/">Continue
-				Buy</a>
 		</form:form>
 
 

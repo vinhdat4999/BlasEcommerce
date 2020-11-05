@@ -23,6 +23,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.OrderDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
+import com.blas.blasecommerce.dao.ReceiverInfoDAO;
 import com.blas.blasecommerce.dao.UserDAO;
 import com.blas.blasecommerce.entity.Product;
 import com.blas.blasecommerce.model.CartDetailModel;
@@ -31,6 +32,7 @@ import com.blas.blasecommerce.model.OrderDetailModel;
 import com.blas.blasecommerce.model.OrderModel;
 import com.blas.blasecommerce.model.PaginationResult;
 import com.blas.blasecommerce.model.ProductModel;
+import com.blas.blasecommerce.model.ReceiverInfoModel;
 import com.blas.blasecommerce.model.UserModel;
 
 @Controller
@@ -49,6 +51,9 @@ public class SystemController {
 
 	@Autowired
 	private OrderDAO orderDAO;
+	
+	@Autowired
+	private ReceiverInfoDAO receiverInfoDAO;
 
 	@RequestMapping("/403")
 	public String accessDenied() {
@@ -125,6 +130,12 @@ public class SystemController {
 			temp.setPrice(productModel.getPrice());
 			detailList.add(temp);
 		}
+		double total = cartDAO.getTotalAmount(username);
+		String totalStr = String.format("%,d", (int) total);
+		
+		ReceiverInfoModel receiverInfoModel = receiverInfoDAO.findReceiverInfoModelByUsername(username);
+		model.addAttribute("receiverInfo", receiverInfoModel);
+		model.addAttribute("total", totalStr);
 		model.addAttribute("detailList", detailList);
 		return "shoppingCart";
 	}
@@ -209,4 +220,32 @@ public class SystemController {
 		model.addAttribute("detailList", details);
 		return "order";
 	}
+
+	@RequestMapping(value = { "/incItem" }, method = RequestMethod.GET)
+	public String incItem(HttpServletRequest request, HttpServletResponse response, Model model,
+			@RequestParam("id") String id) {
+		CartModel cartModel = cartDAO.findCartModel(id);
+		cartDAO.updateQuantityItemInCart(id, cartModel.getQuantity() + 1);
+		return "redirect:/cart";
+	}
+
+	@RequestMapping(value = { "/desItem" }, method = RequestMethod.GET)
+	public String desItem(HttpServletRequest request, HttpServletResponse response, Model model,
+			@RequestParam("id") String id) {
+		CartModel cartModel = cartDAO.findCartModel(id);
+		if(cartModel.getQuantity()>=2) {
+			cartDAO.updateQuantityItemInCart(id, cartModel.getQuantity() - 1);	
+		}
+		return "redirect:/cart";
+	}
+	
+//	@RequestMapping(value = { "/desItem" }, method = RequestMethod.GET)
+//	public String inputItem(HttpServletRequest request, HttpServletResponse response, Model model,
+//			@RequestParam("id") String id) {
+//		CartModel cartModel = cartDAO.findCartModel(id);
+//		if(cartModel.getQuantity()>=2) {
+//			cartDAO.updateQuantityItemInCart(id, cartModel.getQuantity() - 1);	
+//		}
+//		return "redirect:/cart";
+//	}
 }

@@ -22,10 +22,12 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.OrderDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
+import com.blas.blasecommerce.dao.ReceiverInfoDAO;
 import com.blas.blasecommerce.dao.UserDAO;
 import com.blas.blasecommerce.dao.impl.CartDAOImpl;
 import com.blas.blasecommerce.dao.impl.OrderDAOImpl;
 import com.blas.blasecommerce.dao.impl.ProductDAOImpl;
+import com.blas.blasecommerce.dao.impl.ReceiverInfoDAOImpl;
 import com.blas.blasecommerce.dao.impl.UserDAOImpl;
 
 @Configuration
@@ -109,11 +111,6 @@ public class ApplicationContextConfig {
        return transactionManager;
    }
  
-//   @Bean(name = "accountDAO")
-//   public AccountDAO getApplicantDAO() {
-//       return new AccountDAOImpl();
-//   }
-// 
    @Bean(name = "productDAO")
    public ProductDAO getProductDAO() {
        return new ProductDAOImpl();
@@ -133,10 +130,10 @@ public class ApplicationContextConfig {
    public OrderDAO getOrderDAO() {
        return new OrderDAOImpl();
    }
-//    
-//   @Bean(name = "accountDAO")
-//   public AccountDAO getAccountDAO()  {
-//       return new AccountDAOImpl();
-//   }
+   
+   @Bean(name = "receiverInfoDAO")
+   public ReceiverInfoDAO getReceiverInfoDAO() {
+	   return new ReceiverInfoDAOImpl();
+   }
  
 }

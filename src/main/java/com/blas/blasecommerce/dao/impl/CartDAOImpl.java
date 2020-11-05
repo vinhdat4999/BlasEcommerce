@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.entity.Cart;
+import com.blas.blasecommerce.entity.Product;
 import com.blas.blasecommerce.model.CartModel;
 import com.blas.blasecommerce.model.ProductModel;
 
@@ -31,8 +32,24 @@ public class CartDAOImpl implements CartDAO {
 	@Autowired
 	private ProductDAO productDAO;
 
-	@Autowired
-	private CartDAO cartDAO;
+	@Override
+	public Cart findCart(String id) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		Criteria crit = session.createCriteria(Cart.class);
+		crit.add(Restrictions.eq("id", id));
+		return (Cart) crit.uniqueResult();
+	}
+
+	@Override
+	public CartModel findCartModel(String id) {
+		// TODO Auto-generated method stub
+		Cart cart = this.findCart(id);
+		if (cart == null) {
+			return null;
+		}
+		return new CartModel(cart);
+	}
 
 	@Override
 	public List<CartModel> getAllItemInCartByUser(String username) {
@@ -86,7 +103,7 @@ public class CartDAOImpl implements CartDAO {
 		String sql = "delete from " + Cart.class.getName() + " where id='" + id + "'";
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery(sql);
-		query.executeUpdate();	
+		query.executeUpdate();
 	}
 
 	@Override
@@ -119,6 +136,14 @@ public class CartDAOImpl implements CartDAO {
 		// TODO Auto-generated method stub
 		String sql = "delete from " + Cart.class.getName() + " where username ='" + username + "'";
 		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery(sql);
+		query.executeUpdate();
+	}
+
+	@Override
+	public void updateQuantityItemInCart(String id, int quantity) {
+		Session session = sessionFactory.getCurrentSession();
+		String sql = "UPDATE " + Cart.class.getName() + " set quantity = " + quantity + " WHERE id = '" + id + "'";
 		Query query = session.createQuery(sql);
 		query.executeUpdate();
 	}
