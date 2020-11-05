@@ -37,10 +37,11 @@ body {
 	<div class="customer-info-container">
 		<h3>Customer Information:</h3>
 		<ul>
-			<li>Name: ${orderInfo.receiverName}</li>
+			<%-- <li>Name: ${orderInfo.receiverName}</li>
 			<li>Email: ${orderInfo.receiverEmail}</li>
 			<li>Phone: ${orderInfo.receiverPhone}</li>
-			<li>Address: ${orderInfo.receiverAddressId}</li>
+			<li>Address: ${orderInfo.receiverAddressId}</li> --%>
+			<li>AddressInfoID: ${orderInfo.receiverInfoId}</li>
 		</ul>
 		<h3>Order Summary:</h3>
 		<ul>
@@ -59,13 +60,13 @@ body {
 				<a id="linkp"
 					href="${pageContext.request.contextPath}/product?id=${item.productId}">
 					<ul>
-						<fmt:parseNumber var="quanityValue" integerOnly="true"
-							type="number" value="${item.quanity}" />
+						<fmt:parseNumber var="quantityValue" integerOnly="true"
+							type="number" value="${item.quantity}" />
 						<li><img class="product-image"
 							<%-- src="${pageContext.request.contextPath}/productImageMain?productId=${item.productId}" /> --%>
 							src="${pageContext.request.contextPath}/productImage?id=${item.productId}" />
-						<li>${item.productName}</li>
-						<li>${item.price}X${quanityValue}=${item.price * quanityValue}đ</li>
+						<%-- <li>${item.productName}</li> --%>
+						<li>${item.price}X${quantityValue}=${item.price * quantityValue}đ</li>
 					</ul>
 				</a>
 			</div>

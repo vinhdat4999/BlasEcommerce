@@ -80,7 +80,7 @@ body {
                   <li><img class="product-image"
                       src="${pageContext.request.contextPath}/productImage?id=${item.productId}" /></li>
                   <li>${item.productName}</li>
-                  <li>${priceValue} X ${quanityValue} = ${priceValue * quanityValue}đ
+                  <li>${priceValue} X ${quantityValue} = ${priceValue * quantityValue}đ
                   </li>
               </ul>
           </div>

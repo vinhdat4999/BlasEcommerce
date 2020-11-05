@@ -52,7 +52,8 @@ public class OrderDAOImpl implements OrderDAO {
 		Session session = sessionFactory.getCurrentSession();
 
 		List<CartModel> cartList = cartDAO.getAllItemInCartByUser(username);
-		double total = 0;
+		order.setTotal(cartDAO.getTotalAmount(username));
+		session.persist(order);
 		OrderDetail orderDetail = null;
 		for (CartModel cartInfo : cartList) {
 			ProductModel productModel = productDAO.findProductModel(cartInfo.getProductId());
@@ -62,11 +63,8 @@ public class OrderDAOImpl implements OrderDAO {
 			orderDetail.setPrice(productModel.getPrice());
 			orderDetail.setQuantity(cartInfo.getQuantity());
 			orderDetail.setOrderId(orderId);
-			total += productModel.getPrice() * cartInfo.getQuantity();
+			session.persist(orderDetail);
 		}
-		order.setTotal(total);
-		session.persist(order);
-		session.persist(orderDetail);
 	}
 
 	@Override
@@ -88,8 +86,7 @@ public class OrderDAOImpl implements OrderDAO {
 		// TODO Auto-generated method stub
 		String sql = "select new " + OrderModel.class.getName() + "(ord.id, ord.username,"
 				+ " ord.receiverInfoId, ord.orderTime, ord.status, ord.expectShipDate, ord.description, ord.code, ord.coupon, ord.coins, ord.total) from "
-				+ Orders.class.getName() + " ord";// where ord.username= '" + userName + "'";// "' order by
-													// ord.orderTime desc";
+				+ Orders.class.getName() + " ord where ord.username= '" + userName + "' order by ord.orderTime desc";
 		System.out.println("sql: " + sql);
 		Session session = this.sessionFactory.getCurrentSession();
 
@@ -114,7 +111,7 @@ public class OrderDAOImpl implements OrderDAO {
 	public List<OrderDetailModel> listOrderDetailModels(String id) {
 		// TODO Auto-generated method stub
 		String sql = "select new " + OrderDetailModel.class.getName()
-				+ "(ord.id, ord.productId, ord.productName, ord.price, ord.quanity, ord.orderId) from "
+				+ "(ord.id, ord.productId, ord.price, ord.quantity, ord.orderId) from "
 				+ OrderDetail.class.getName() + " ord where ord.orderId ='" + id + "'";
 		Session session = this.sessionFactory.getCurrentSession();
 

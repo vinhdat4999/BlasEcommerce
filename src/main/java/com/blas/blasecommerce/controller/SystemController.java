@@ -37,24 +37,24 @@ import com.blas.blasecommerce.model.UserModel;
 @Transactional
 @EnableWebMvc
 public class SystemController {
-	
+
 	@Autowired
 	private ProductDAO productDAO;
-	
+
 	@Autowired
 	private CartDAO cartDAO;
-	
+
 	@Autowired
 	private UserDAO userDAO;
-	
+
 	@Autowired
 	private OrderDAO orderDAO;
-	
+
 	@RequestMapping("/403")
 	public String accessDenied() {
 		return "/403";
 	}
-	
+
 	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
 	public String login(Model model) {
 		return "login";
@@ -105,7 +105,7 @@ public class SystemController {
 		model.addAttribute("searchContent", content);
 		return "productList";
 	}
-	
+
 	@RequestMapping(value = { "/cart" }, method = RequestMethod.GET)
 	public String shoppingCartHandler(HttpServletRequest request, Model model) {
 		String username = "";
@@ -148,7 +148,6 @@ public class SystemController {
 		cartDAO.updateQuantityInCart(quantityInt, username);
 		return "redirect:/cart";
 	}
-	
 
 	@RequestMapping(value = { "/orderList" }, method = RequestMethod.GET)
 	public String orderList(Model model, //
@@ -191,5 +190,23 @@ public class SystemController {
 		}
 		cartDAO.deleteAllItemsInCartByUser(username);
 		return "shoppingCartFinalize";
+	}
+
+	@RequestMapping(value = { "/order" }, method = RequestMethod.GET)
+	public String orderView(Model model, @RequestParam("id") String id) {
+		OrderModel orderModel = null;
+		if (id != null) {
+			orderModel = this.orderDAO.getOrderModel(id);
+		}
+		if (orderModel == null) {
+			return "redirect:/orderList";
+		}
+		List<OrderDetailModel> details = orderDAO.listOrderDetailModels(id);
+		if (details == null) {
+			return "redirect:/orderList";
+		}
+		model.addAttribute("orderInfo", orderModel);
+		model.addAttribute("detailList", details);
+		return "order";
 	}
 }
