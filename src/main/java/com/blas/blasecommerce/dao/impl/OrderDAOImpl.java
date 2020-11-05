@@ -42,17 +42,20 @@ public class OrderDAOImpl implements OrderDAO {
 		order.setUsername(username);
 		order.setReceiverInfoId(receiverInfoId);
 		order.setOrderTime(LocalDateTime.now());
-		order.setStatus("Cho xac nhan");
+		order.setStatus("Đặt hàng thành công");
 		order.setExpectShipDate(new Date());
-		order.setDescription(null);
 		order.setCode("");
 		order.setCoupon("");
 		order.setCoins(0);
-
-		Session session = sessionFactory.getCurrentSession();
-
-		List<CartModel> cartList = cartDAO.getAllItemInCartByUser(username);
 		order.setTotal(cartDAO.getTotalAmount(username));
+		List<CartModel> cartList = cartDAO.getAllItemInCartByUser(username);
+		ProductModel productModel2 = productDAO.findProductModel(cartList.get(0).getProductId());
+		if (cartList.size() == 1) {
+			order.setDescription(productModel2.getName());
+		} else {
+			order.setDescription(productModel2.getName() + " và " + (cartList.size() - 1) + " sản phẩm khác");
+		}
+		Session session = sessionFactory.getCurrentSession();
 		session.persist(order);
 		OrderDetail orderDetail = null;
 		for (CartModel cartInfo : cartList) {
@@ -111,8 +114,8 @@ public class OrderDAOImpl implements OrderDAO {
 	public List<OrderDetailModel> listOrderDetailModels(String id) {
 		// TODO Auto-generated method stub
 		String sql = "select new " + OrderDetailModel.class.getName()
-				+ "(ord.id, ord.productId, ord.price, ord.quantity, ord.orderId) from "
-				+ OrderDetail.class.getName() + " ord where ord.orderId ='" + id + "'";
+				+ "(ord.id, ord.productId, ord.price, ord.quantity, ord.orderId) from " + OrderDetail.class.getName()
+				+ " ord where ord.orderId ='" + id + "'";
 		Session session = this.sessionFactory.getCurrentSession();
 
 		Query query = session.createQuery(sql);
