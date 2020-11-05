@@ -174,4 +174,22 @@ public class SystemController {
 		model.addAttribute("paginationResult", paginationResult);
 		return "orderList";
 	}
+
+	@RequestMapping(value = { "/shoppingCartFinalize" }, method = RequestMethod.GET)
+	public String shoppingCartFinalize(HttpServletRequest request, Model model) {
+
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		List<CartModel> itemList = cartDAO.getAllItemInCartByUser(username);
+		if (itemList.size() == 0) {
+			return "redirect:/shoppingCart";
+		}
+		cartDAO.deleteAllItemsInCartByUser(username);
+		return "shoppingCartFinalize";
+	}
 }

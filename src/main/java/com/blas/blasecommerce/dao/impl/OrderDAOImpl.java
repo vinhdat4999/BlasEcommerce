@@ -53,20 +53,20 @@ public class OrderDAOImpl implements OrderDAO {
 
 		List<CartModel> cartList = cartDAO.getAllItemInCartByUser(username);
 		double total = 0;
+		OrderDetail orderDetail = null;
 		for (CartModel cartInfo : cartList) {
 			ProductModel productModel = productDAO.findProductModel(cartInfo.getProductId());
-			OrderDetail orderDetail = new OrderDetail();
+			orderDetail = new OrderDetail();
 			orderDetail.setId(UUID.randomUUID().toString());
 			orderDetail.setProductId(cartInfo.getProductId());
 			orderDetail.setPrice(productModel.getPrice());
 			orderDetail.setQuantity(cartInfo.getQuantity());
 			orderDetail.setOrderId(orderId);
-			session.persist(orderDetail);
 			total += productModel.getPrice() * cartInfo.getQuantity();
 		}
-
 		order.setTotal(total);
 		session.persist(order);
+		session.persist(orderDetail);
 	}
 
 	@Override

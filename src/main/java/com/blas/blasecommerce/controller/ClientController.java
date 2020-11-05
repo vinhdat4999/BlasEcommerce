@@ -43,7 +43,7 @@ public class ClientController {
 
 	@Autowired
 	private UserDAO userDAO;
-	
+
 	@Autowired
 	private OrderDAO orderDAO;
 
@@ -205,17 +205,11 @@ public class ClientController {
 			model.addAttribute("detailList", detailList);
 			return "shoppingCartCustomer";
 		} else {
-			try {
-				orderDAO.saveOrder(username, customerForm.getLastname(), customerForm.getPhoneNum(),
-						customerForm.getEmail(), "a");
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-			}
+			orderDAO.saveOrder(username, customerForm.getLastname(), customerForm.getPhoneNum(),
+					customerForm.getEmail(), "a");
 			return "redirect:/shoppingCartFinalize";
 		}
 	}
-
 
 	public static boolean isStringIsDoubleNumber(String s) {
 		try {

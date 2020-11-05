@@ -114,4 +114,13 @@ public class CartDAOImpl implements CartDAO {
 		return amountList;
 	}
 
+	@Override
+	public void deleteAllItemsInCartByUser(String username) {
+		// TODO Auto-generated method stub
+		String sql = "delete from " + Cart.class.getName() + " where username ='" + username + "'";
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery(sql);
+		query.executeUpdate();
+	}
+
 }
