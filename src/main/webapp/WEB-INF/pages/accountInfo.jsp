@@ -28,8 +28,6 @@ body {
    <jsp:include page="_header.jsp" />
    <jsp:include page="_menu.jsp" />
  
-   <div class="page-title">Account Info</div>
- 
    <div class="account-container">
  
  

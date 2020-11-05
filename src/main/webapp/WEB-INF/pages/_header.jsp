@@ -157,7 +157,7 @@ function  validation(){
 				<a href="${pageContext.request.contextPath}/"><img height="50"
 					src="<c:url value='/images/BLAS.png'/>" /></a>
 			</div>
-			<div style="padding-top: inherit;">
+			<div style="padding-top: 5px;">
 				<input value="${searchContent}" class="search-box" type="text" name="content" id="content"
 					placeholder="Tìm sản phẩm..." style="border-radius: 30px;">
 				<button class="add-to-cart btn btn-default" type="submit" onclick="return validation()">Tìm kiếm
