@@ -32,10 +32,8 @@ body {
 
 	<fmt:setLocale value="en_US" scope="session" />
 
-	<div class="page-title">Order Info</div>
-
 	<div class="customer-info-container">
-		<h3>Customer Information:</h3>
+		<h3>Thông tin giao hàng</h3>
 		<ul>
 			<%-- <li>Name: ${orderInfo.receiverName}</li>
 			<li>Email: ${orderInfo.receiverEmail}</li>

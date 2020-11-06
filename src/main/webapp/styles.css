@@ -26,7 +26,7 @@ body {
 	top: 50%;
 	text-align: left;
 	position: relative;
-	background: #189fff;
+	background: #22a2ff;
 	color: white;
 }
 
@@ -82,6 +82,15 @@ body {
 	padding: 0px 5px;
 }
 
+.reveiver-info-container {
+	padding: 5px;
+	width: 30%;
+    height: 180px;
+	display: inline-block;
+	text-align: left;
+    border-style: groove;
+    background-color: white;
+}
 .product-preview-container {
 	padding: 5px;
 	width: 20%;

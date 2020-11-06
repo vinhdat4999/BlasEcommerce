@@ -14,54 +14,44 @@ import com.blas.blasecommerce.authentication.AuthenticationService;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-@Autowired
-AuthenticationService authenticationService;
+	@Autowired
+	AuthenticationService authenticationService;
 
-@Autowired
-public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
- 
-    // CĂ¡c User trong Database
-    auth.userDetailsService(authenticationService);
+		// CĂ¡c User trong Database
+		auth.userDetailsService(authenticationService);
 
-}
+	}
 
-@Override
-protected void configure(HttpSecurity http) throws Exception {
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
 
-    http.csrf().disable();
+		http.csrf().disable();
 
+		http.authorizeRequests()
+				.antMatchers("/product", "/orderList", "/order", "/accountInfo", "/cart", "/checkout", "/desItem",
+						"/incItem", "/shoppingCartRemoveProduct", "/shipping", "/shipping-to")//
+				.access("hasAnyRole('ROLE_ADMIN', 'ROLE_CUSTOMER')");
 
-    // CĂ¡c yĂªu cáº§u pháº£i login vá»›i vai trĂ² EMPLOYEE hoáº·c MANAGER.
-    // Náº¿u chÆ°a login, nĂ³ sáº½ redirect tá»›i trang /login.
-    http.authorizeRequests().antMatchers("/orderList","/order", "/accountInfo")//
-            .access("hasAnyRole('ROLE_ADMIN', 'ROLE_CUSTOMER')");
+		http.authorizeRequests().antMatchers("/editProduct").access("hasRole('ROLE_ADMIN')");
 
+		http.authorizeRequests().and().exceptionHandling().accessDeniedPage("/403");
 
-    // Trang chá»‰ dĂ nh cho MANAGER
-    http.authorizeRequests().antMatchers("/product").access("hasRole('ROLE_ADMIN')");
+		http.authorizeRequests().and().formLogin()//
 
+				// Submit URL cá»§a trang login
+				.loginProcessingUrl("/j_spring_security_check") // Submit URL
+				.loginPage("/login")//
+				.defaultSuccessUrl("/")//
+				.failureUrl("/login?error=true")//
+				.usernameParameter("username")//
+				.passwordParameter("password")
 
-    // Khi ngÆ°á»�i dĂ¹ng Ä‘Ă£ login, vá»›i vai trĂ² XX.
-    // NhÆ°ng truy cáº­p vĂ o trang yĂªu cáº§u vai trĂ² YY,
-    // Ngoáº¡i lá»‡ AccessDeniedException sáº½ nĂ©m ra.
-    http.authorizeRequests().and().exceptionHandling().accessDeniedPage("/403");
+				// Cáº¥u hĂ¬nh cho Logout Page.
+				// (Sau khi logout, chuyá»ƒn tá»›i trang home)
+				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/");
 
-
-    // Cáº¥u hĂ¬nh cho Login Form.
-    http.authorizeRequests().and().formLogin()//
-       
-            // Submit URL cá»§a trang login
-            .loginProcessingUrl("/j_spring_security_check") // Submit URL
-            .loginPage("/login")//
-            .defaultSuccessUrl("/")//
-            .failureUrl("/login?error=true")//
-            .usernameParameter("username")//
-            .passwordParameter("password")
-         
-            // Cáº¥u hĂ¬nh cho Logout Page.
-            // (Sau khi logout, chuyá»ƒn tá»›i trang home)
-            .and().logout().logoutUrl("/logout").logoutSuccessUrl("/");
-
-}
+	}
 }

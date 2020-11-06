@@ -135,9 +135,9 @@ body {
 						<div style="margin-left: 100px">Thành tiền</div>
 						<div class="total">${total}đ</div>
 					</div>
-					<div style="margin-top: 120px;">
+					<div style="margin-top: 120px;margin-bottom:50px;">
 						<a class="btn-confirm-order"
-							href="${pageContext.request.contextPath}/shoppingCartCustomer">Tiến
+							href="${pageContext.request.contextPath}/checkout">Tiến
 							hành đặt hàng</a>
 					</div>
 				</div>

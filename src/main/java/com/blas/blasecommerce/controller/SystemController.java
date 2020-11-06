@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,7 +53,7 @@ public class SystemController {
 
 	@Autowired
 	private OrderDAO orderDAO;
-	
+
 	@Autowired
 	private ReceiverInfoDAO receiverInfoDAO;
 
@@ -112,7 +114,8 @@ public class SystemController {
 	}
 
 	@RequestMapping(value = { "/cart" }, method = RequestMethod.GET)
-	public String shoppingCartHandler(HttpServletRequest request, Model model) {
+	public String shoppingCartHandler(@CookieValue(value = "receiverInfo", defaultValue = "") String receiverInfoId,
+			HttpServletRequest request, HttpServletResponse response, Model model) {
 		String username = "";
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof UserDetails) {
@@ -132,8 +135,15 @@ public class SystemController {
 		}
 		double total = cartDAO.getTotalAmount(username);
 		String totalStr = String.format("%,d", (int) total);
-		
-		ReceiverInfoModel receiverInfoModel = receiverInfoDAO.findReceiverInfoModelByUsername(username);
+
+		ReceiverInfoModel receiverInfoModel = null;
+		if (receiverInfoId == null || receiverInfoId.equals("")) {
+			receiverInfoModel = receiverInfoDAO.findReceiverInfoModelByUsername(username);
+			Cookie cookie = new Cookie("receiverInfo", receiverInfoModel.getId());
+			response.addCookie(cookie);
+		} else {
+			receiverInfoModel = receiverInfoDAO.findReceiverInfoModelById(receiverInfoId);
+		}
 		model.addAttribute("receiverInfo", receiverInfoModel);
 		model.addAttribute("total", totalStr);
 		model.addAttribute("detailList", detailList);
@@ -232,19 +242,70 @@ public class SystemController {
 	public String desItem(HttpServletRequest request, HttpServletResponse response, Model model,
 			@RequestParam("id") String id) {
 		CartModel cartModel = cartDAO.findCartModel(id);
-		if(cartModel.getQuantity()>=2) {
-			cartDAO.updateQuantityItemInCart(id, cartModel.getQuantity() - 1);	
+		if (cartModel.getQuantity() >= 2) {
+			cartDAO.updateQuantityItemInCart(id, cartModel.getQuantity() - 1);
 		}
 		return "redirect:/cart";
 	}
-	
-//	@RequestMapping(value = { "/desItem" }, method = RequestMethod.GET)
-//	public String inputItem(HttpServletRequest request, HttpServletResponse response, Model model,
-//			@RequestParam("id") String id) {
-//		CartModel cartModel = cartDAO.findCartModel(id);
-//		if(cartModel.getQuantity()>=2) {
-//			cartDAO.updateQuantityItemInCart(id, cartModel.getQuantity() - 1);	
-//		}
-//		return "redirect:/cart";
-//	}
+
+	@RequestMapping(value = { "/shipping" }, method = RequestMethod.GET)
+	public String chooseReceiverInfo(HttpServletRequest request, HttpServletResponse response, Model model,
+			@RequestParam(value = "page", defaultValue = "1") int page) {
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		final int maxResult = 48;
+		final int maxNavigationPage = 10;
+		PaginationResult<ReceiverInfoModel> result = receiverInfoDAO.queryReceiverInfos(page, //
+				maxResult, maxNavigationPage, username);
+		model.addAttribute("paginationReceiverInfos", result);
+		return "shipping";
+	}
+
+	@RequestMapping(value = { "/shipping-to" }, method = RequestMethod.GET)
+	public String changeReceiverInfo(HttpServletRequest request, HttpServletResponse response, Model model,
+			@RequestParam(value = "receiverInfo", defaultValue = "") String receiverInfoId) {
+		Cookie cookie = new Cookie("receiverInfo", receiverInfoId);
+		response.addCookie(cookie);
+		return "redirect:/cart";
+	}
+
+	@RequestMapping(value = { "/checkout" }, method = RequestMethod.GET)
+	public String checkout(@CookieValue(value = "receiverInfo", defaultValue = "") String receiverInfoId,
+			HttpServletRequest request, HttpServletResponse response, Model model) {
+		ReceiverInfoModel receiverInfoModel = receiverInfoDAO.findReceiverInfoModelById(receiverInfoId);
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		double total = cartDAO.getTotalAmount(username);
+		String totalStr = String.format("%,d", (int) total);
+		model.addAttribute("total", totalStr);
+		model.addAttribute("receiverInfo", receiverInfoModel);
+		return "checkout";
+	}
+
+	@RequestMapping(value = { "/checkout" }, method = RequestMethod.POST)
+	public String checkout(@CookieValue(value = "receiverInfo", defaultValue = "") String receiverInfoId, Model model,
+			HttpServletResponse response) {
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		orderDAO.saveOrder(username, receiverInfoId);
+		Cookie cookie = new Cookie("receiverInfo", null);
+		cookie.setMaxAge(0);
+		response.addCookie(cookie);
+		return "redirect:/shoppingCartFinalize";
+	}
 }
