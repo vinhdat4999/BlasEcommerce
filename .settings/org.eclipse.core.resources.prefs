@@ -3,3 +3,4 @@ encoding//src/main/java/com/blas/blasecommerce/config/WebSecurityConfig.java=UTF
 encoding//src/main/java/com/blas/blasecommerce/controller/CategoryController.java=UTF-8
 encoding//src/main/java/com/blas/blasecommerce/dao/impl/OrderDAOImpl.java=UTF-8
 encoding//src/main/java/com/blas/blasecommerce/util/SendEmail.java=UTF-8
+encoding//src/main/webapp/WEB-INF/pages/shoppingCartFinalize.jsp=UTF-8

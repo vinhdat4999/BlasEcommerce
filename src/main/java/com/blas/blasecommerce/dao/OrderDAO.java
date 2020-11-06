@@ -7,7 +7,7 @@ import com.blas.blasecommerce.model.OrderModel;
 import com.blas.blasecommerce.model.PaginationResult;
 
 public interface OrderDAO {
-	public void saveOrder(String username, String name, String phone, String email, String addressId);
+	public void saveOrder(String username, String receiverInfoId);
 
 	public PaginationResult<OrderModel> listOrderModel(int page, int maxResult, int maxNavigationPage);
 

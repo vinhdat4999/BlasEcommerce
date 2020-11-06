@@ -1,9 +1,8 @@
 package com.blas.blasecommerce.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,8 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,12 +22,8 @@ import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.OrderDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.dao.UserDAO;
-import com.blas.blasecommerce.model.CartDetailModel;
-import com.blas.blasecommerce.model.CartModel;
 import com.blas.blasecommerce.model.PaginationResult;
-import com.blas.blasecommerce.model.ProductImageModel;
 import com.blas.blasecommerce.model.ProductModel;
-import com.blas.blasecommerce.model.UserModel;
 
 @Controller
 @Transactional
@@ -41,17 +35,24 @@ public class ClientController {
 	@Autowired
 	private ProductDAO productDAO;
 
-	@Autowired
-	private UserDAO userDAO;
-
-	@Autowired
-	private OrderDAO orderDAO;
-
 	@RequestMapping("/")
-	public String listProductHandler(Model model, //
+	public String listProductHandler(@CookieValue(value = "receiverInfo", defaultValue = "") String receiverInfoId,
+			HttpServletResponse response, Model model, //
 			@RequestParam(value = "name", defaultValue = "") String likeName,
 			@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "sort", defaultValue = "") String type) {
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		if (username.equals("anonymousUser")) {
+			Cookie cookie = new Cookie("receiverInfo", null);
+			cookie.setMaxAge(0);
+			response.addCookie(cookie);
+		}
 		final int maxResult = 48;
 		final int maxNavigationPage = 10;
 		PaginationResult<ProductModel> result;
@@ -118,97 +119,6 @@ public class ClientController {
 			@RequestParam(value = "id", defaultValue = "") String id) {
 		cartDAO.deleteItemInCart(id);
 		return "redirect:/cart";
-	}
-
-	@RequestMapping(value = { "/shoppingCartCustomer" }, method = RequestMethod.GET)
-	public String shoppingCartCustomerForm(HttpServletRequest request, Model model) {
-
-		String username = "";
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof UserDetails) {
-			username = ((UserDetails) principal).getUsername();
-		} else {
-			username = principal.toString();
-		}
-		List<CartModel> itemList = cartDAO.getAllItemInCartByUser(username);
-
-		if (itemList.size() == 0) {
-			return "redirect:/cart";
-		}
-		UserModel userModel = userDAO.findUserModel(username);
-		List<CartDetailModel> detailList = new ArrayList<CartDetailModel>();
-		for (CartModel i : itemList) {
-			CartDetailModel temp = new CartDetailModel(i.getId(), i.getProductId(), "", i.getQuantity(), 0,
-					i.getUsername());
-			ProductModel productModel = productDAO.findProductModel(i.getProductId());
-			temp.setProductName(productModel.getName());
-			temp.setPrice(productModel.getPrice());
-			detailList.add(temp);
-		}
-		model.addAttribute("detailList", detailList);
-		model.addAttribute("customerForm", userModel);
-		double totalAmount = cartDAO.getTotalAmount(username);
-		List<Double> itemAmount = new ArrayList<Double>();
-		itemAmount = cartDAO.getTotalAmountItem(username);
-		model.addAttribute("totalAmount", totalAmount);
-		model.addAttribute("itemAmount", itemAmount);
-		return "shoppingCartCustomer";
-	}
-
-	@RequestMapping(value = { "/shoppingCartCustomer" }, method = RequestMethod.POST)
-	public String shoppingCartCustomerSave(HttpServletRequest request, //
-			Model model, //
-			@ModelAttribute("customerForm") @Validated UserModel customerForm) {
-		boolean hasError = false;
-		if (customerForm.getLastname().trim().length() == 0) {
-			hasError = true;
-			model.addAttribute("nameError", "Please input name");
-		}
-		if (customerForm.getPhoneNum().trim().length() == 0) {
-			hasError = true;
-			model.addAttribute("phoneError", "Please input phone number");
-		} else {
-			if (!isStringIsLongNumber(customerForm.getPhoneNum().trim())) {
-				hasError = true;
-				model.addAttribute("phoneError", "Please input phone number include number");
-			}
-		}
-		if (customerForm.getEmail().trim().length() > 0) {
-			String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-			if (!customerForm.getEmail().trim().matches(regex)) {
-				hasError = true;
-				model.addAttribute("emailError", "Please input email valid");
-			}
-		}
-//		if (customerForm.getAddressId().length() == 0) {
-//			hasError = true;
-//			model.addAttribute("addressError", "Please input address");
-//		}
-		String username = "";
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof UserDetails) {
-			username = ((UserDetails) principal).getUsername();
-		} else {
-			username = principal.toString();
-		}
-		if (hasError) {
-			List<CartModel> itemList = cartDAO.getAllItemInCartByUser(username);
-			List<CartDetailModel> detailList = new ArrayList<CartDetailModel>();
-			for (CartModel i : itemList) {
-				CartDetailModel temp = new CartDetailModel(i.getId(), i.getProductId(), "", i.getQuantity(), 0,
-						i.getUsername());
-				ProductModel productModel = productDAO.findProductModel(i.getProductId());
-				temp.setProductName(productModel.getName());
-				temp.setPrice(productModel.getPrice());
-				detailList.add(temp);
-			}
-			model.addAttribute("detailList", detailList);
-			return "shoppingCartCustomer";
-		} else {
-			orderDAO.saveOrder(username, customerForm.getLastname(), customerForm.getPhoneNum(),
-					customerForm.getEmail(), "a");
-			return "redirect:/shoppingCartFinalize";
-		}
 	}
 
 	public static boolean isStringIsDoubleNumber(String s) {
