@@ -45,12 +45,10 @@ body {
 	text-align: center;
 	margin-top: 10px;
 	padding: 5px 0px 0px 0px;
-	border-top: 1px solid #ccc;
 }
 
 .menu-container {
 	text-align: right;
-	margin: 10px 5px;
 }
 
 .menu-container a {
@@ -71,15 +69,14 @@ body {
 
 .demo-container, .login-container, .account-container {
 	padding: 5px;
-	border: 1px solid #ccc;
 	text-align: left;
 	margin: 20px 0px;
 }
 
 .customer-info-container {
 	text-align: left;
-	border: 1px solid #ccc;
 	padding: 0px 5px;
+	padding-bottom: 20px;
 }
 
 .reveiver-info-container {
@@ -90,6 +87,14 @@ body {
 	text-align: left;
     border-style: groove;
     background-color: white;
+}
+
+.reveiver-info-account-info-container {
+	padding: 5px;
+	width: 40%;
+	display: inline-block;
+	text-align: left;
+    border-style: groove;
 }
 .product-preview-container {
 	padding: 5px;

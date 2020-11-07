@@ -20,9 +20,9 @@ public class CategoryController {
 	@Autowired
 	private ProductDAO productDAO;
 	
-	@RequestMapping("/moi")
+	@RequestMapping("/banh")
 	public String listInCategoryBait(Model model, //
-			@RequestParam(value = "name", defaultValue = "Mồi") String likeName,
+			@RequestParam(value = "name", defaultValue = "Bánh") String likeName,
 			@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "sort", defaultValue = "") String type) {
 		final int maxResult = 48;
@@ -44,9 +44,9 @@ public class CategoryController {
 		return "productList";
 	}
 
-	@RequestMapping("/bia")
+	@RequestMapping("/keo")
 	public String listInCategoryBeer(Model model, //
-			@RequestParam(value = "name", defaultValue = "Bia") String likeName,
+			@RequestParam(value = "name", defaultValue = "Kẹo") String likeName,
 			@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "sort", defaultValue = "") String type) {
 		final int maxResult = 48;
@@ -68,33 +68,9 @@ public class CategoryController {
 		return "productList";
 	}
 
-	@RequestMapping("/nuoc-uong")
+	@RequestMapping("/nuoc-ngot")
 	public String listInCategoryDrink(Model model, //
-			@RequestParam(value = "name", defaultValue = "Nước uống") String likeName,
-			@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "sort", defaultValue = "") String type) {
-		final int maxResult = 48;
-		final int maxNavigationPage = 10;
-		PaginationResult<ProductModel> result;
-		if (type.equals("price-inc")) {
-			result = productDAO.queryProductsByCategorySortPrice(page, //
-					maxResult, maxNavigationPage, likeName,"asc");
-		} else {
-			if (type.equals("price-des")) {
-				result = productDAO.queryProductsByCategorySortPrice(page, //
-						maxResult, maxNavigationPage, likeName,"desc");
-			} else {
-				result = productDAO.queryProductsByCategory(page, //
-						maxResult, maxNavigationPage, likeName);
-			}
-		}
-		model.addAttribute("paginationProducts", result);
-		return "productList";
-	}
-
-	@RequestMapping("/lau")
-	public String listInCategoryHotpot(Model model, //
-			@RequestParam(value = "name", defaultValue = "Láº©u") String likeName,
+			@RequestParam(value = "name", defaultValue = "Nước ngọt") String likeName,
 			@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "sort", defaultValue = "") String type) {
 		final int maxResult = 48;
