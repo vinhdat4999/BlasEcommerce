@@ -79,7 +79,7 @@ body {
 							<%-- <a id="linkp"
 						href="${pageContext.request.contextPath}/product?id=${item.productId}"> --%>
 
-							<div style="display: flex;">
+							<div style="display: flex; width: 65%;">
 								<div>
 									<a id="linkp"
 										href="${pageContext.request.contextPath}/product?id=${item.productId}">
@@ -91,8 +91,8 @@ body {
 								<div style="margin-left: 30px; display: grid;">
 									<a id="linkp"
 										href="${pageContext.request.contextPath}/product?id=${item.productId}">
-										${item.productName} </a> <a class="btnDelete"
-										href="${pageContext.request.contextPath}/shoppingCartRemoveProduct?id=${item.id}">Delete
+										${item.productName} </a> <a style="width: 70px; height: 20px;" class="btnDelete"
+										href="${pageContext.request.contextPath}/shoppingCartRemoveProduct?id=${item.id}">Xóa
 									</a>
 								</div>
 							</div>
@@ -125,7 +125,8 @@ body {
 							</div>
 						</div>
 						<div style="margin: 50px;">
-							<div style="text-align: center;font-weight: bold;">${receiverInfo.receiverName} | ${receiverInfo.receiverPhone}</div>
+							<div style="text-align: center; font-weight: bold;">${receiverInfo.receiverName}
+								| ${receiverInfo.receiverPhone}</div>
 							<div style="margin-top: 10px;">${receiverInfo.receiverAddress}</div>
 						</div>
 					</div>
@@ -135,10 +136,10 @@ body {
 						<div style="margin-left: 100px">Thành tiền</div>
 						<div class="total">${total}đ</div>
 					</div>
-					<div style="margin-top: 120px;margin-bottom:50px;">
+					<div style="margin-top: 120px; margin-bottom: 50px;">
 						<a class="btn-confirm-order"
-							href="${pageContext.request.contextPath}/checkout">Tiến
-							hành đặt hàng</a>
+							href="${pageContext.request.contextPath}/checkout">Tiến hành
+							đặt hàng</a>
 					</div>
 				</div>
 			</div>

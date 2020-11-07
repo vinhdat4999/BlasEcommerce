@@ -137,13 +137,11 @@ li a:hover:not(.active) {
 
 	<fmt:setLocale value="en_US" scope="session" />
 	<div>
-		<div class="navigation" style="float: left; width: 20%">
+		<div class="navigation" style="float: left; width: 20%; margin-top: 40px;">
 			<ul>
-				<li><a href="${pageContext.request.contextPath}/moi">Mồi</a></li>
-				<li><a href="${pageContext.request.contextPath}/lau">Lẩu</a></li>
-				<li><a href="${pageContext.request.contextPath}/bia">Bia</a></li>
-				<li><a href="${pageContext.request.contextPath}/nuoc-uong">Nước
-						uống</a></li>
+				<li><a href="${pageContext.request.contextPath}/banh">Bánh</a></li>
+				<li><a href="${pageContext.request.contextPath}/keo">Kẹo</a></li>
+				<li><a href="${pageContext.request.contextPath}/nuoc-ngot">Nước ngọt</a></li>
 			</ul>
 		</div>
 		<%
@@ -220,7 +218,7 @@ li a:hover:not(.active) {
 								<li><img class="product-image"
 									<%-- src="${pageContext.request.contextPath}/productImageMain?productId=${prodInfo.id}" /></li> --%>
 						src="${pageContext.request.contextPath}/productImage?id=${prodInfo.id}" /></li>
-								<li>${prodInfo.name}</li>
+								<li style="height: 75px;">${prodInfo.name}</li>
 								<fmt:parseNumber var="intValue" integerOnly="true" type="number"
 									value="${prodInfo.price}" />
 								<li><c:out value="${intValue}" /> đ</li>

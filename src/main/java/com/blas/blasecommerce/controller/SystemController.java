@@ -64,6 +64,16 @@ public class SystemController {
 
 	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
 	public String login(Model model) {
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		if (!username.equals("anonymousUser")) {
+			return "redirect:/";
+		}
 		return "login";
 	}
 
@@ -71,6 +81,20 @@ public class SystemController {
 	public String accountInfo(Model model) {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		UserModel userModel = userDAO.findUserModel(userDetails.getUsername());
+		
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		final int maxResult = 1000;
+		final int maxNavigationPage = 1000;
+		PaginationResult<ReceiverInfoModel> result = receiverInfoDAO.queryReceiverInfos(1, //
+				maxResult, maxNavigationPage, username);
+		model.addAttribute("paginationReceiverInfos", result);
+		
 		model.addAttribute("user", userModel);
 		return "accountInfo";
 	}
@@ -222,11 +246,27 @@ public class SystemController {
 			return "redirect:/orderList";
 		}
 		List<OrderDetailModel> details = orderDAO.listOrderDetailModels(id);
+		for (OrderDetailModel i : details) {
+			ProductModel productModel = productDAO.findProductModel(i.getProductId());
+			i.setName(productModel.getName());
+		}
 		if (details == null) {
 			return "redirect:/orderList";
 		}
+		ReceiverInfoModel receiverInfoModel = receiverInfoDAO.findReceiverInfoModelById(orderModel.getReceiverInfoId());
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		double total = orderModel.getTotal();
+		String totalStr = String.format("%,d", (int) total);
+		model.addAttribute("receiverInfo", receiverInfoModel);
 		model.addAttribute("orderInfo", orderModel);
 		model.addAttribute("detailList", details);
+		model.addAttribute("total", totalStr);
 		return "order";
 	}
 

@@ -33,43 +33,53 @@ body {
 	<fmt:setLocale value="en_US" scope="session" />
 
 	<div class="customer-info-container">
-		<h3>Thông tin giao hàng</h3>
-		<ul>
-			<%-- <li>Name: ${orderInfo.receiverName}</li>
-			<li>Email: ${orderInfo.receiverEmail}</li>
-			<li>Phone: ${orderInfo.receiverPhone}</li>
-			<li>Address: ${orderInfo.receiverAddressId}</li> --%>
-			<li>AddressInfoID: ${orderInfo.receiverInfoId}</li>
-		</ul>
-		<h3>Order Summary:</h3>
-		<ul>
-			<%--<li>Total:
-           <span class="total">
-           <fmt:formatNumber value="${orderInfo.amount}" type="currency"/>
-           </span></li> --%>
-		</ul>
+		<h3 style="padding: 50px; padding-bottom: 0px;">Thông tin giao
+			hàng</h3>
+		<div>
+			<div style="text-align: center; font-weight: bold;">${receiverInfo.receiverName}
+				| ${receiverInfo.receiverPhone}</div>
+			<div style="margin-top: 10px; text-align: center;">${receiverInfo.receiverAddress}</div>
+		</div>
 	</div>
+	<div style="width: 64%; background-color: white; margin-left: 270px;">
+		<c:forEach items="${detailList}" var="item" varStatus="varStatus">
+			<!-- <div class="product-preview-container"> -->
+			<div class="product-preview-shopping-cart-container">
+				<%-- <a id="linkp"
+						href="${pageContext.request.contextPath}/product?id=${item.productId}"> --%>
 
-	<br />
-	<div class="container">
-
-		<c:forEach items="${detailList}" var="item">
-			<div class="product-preview-container">
-				<a id="linkp"
-					href="${pageContext.request.contextPath}/product?id=${item.productId}">
-					<ul>
-						<fmt:parseNumber var="quantityValue" integerOnly="true"
-							type="number" value="${item.quantity}" />
-						<li><img class="product-image"
-							<%-- src="${pageContext.request.contextPath}/productImageMain?productId=${item.productId}" /> --%>
+				<div style="display: flex; width: 70%;">
+					<div>
+						<a id="linkp"
+							href="${pageContext.request.contextPath}/product?id=${item.productId}">
+							<img
 							src="${pageContext.request.contextPath}/productImage?id=${item.productId}" />
-						<%-- <li>${item.productName}</li> --%>
-						<li>${item.price}X${quantityValue}=${item.price * quantityValue}đ</li>
-					</ul>
-				</a>
+						</a>
+					</div>
+					<div style="display: inline-block;"></div>
+					<div style="margin-left: 30px; display: grid;">
+						<a id="linkp"
+							href="${pageContext.request.contextPath}/product?id=${item.productId}">
+							${item.name} </a>
+					</div>
+				</div>
+				<div style="margin-left: auto; display: flex;">
+					<fmt:parseNumber var="price" integerOnly="true" type="number"
+						value="${item.price}" />
+					<div style="margin-right: 25px;">${price}đ</div>
+					<div>x ${item.quantity}</div>
+					<div style="margin-left: 60px; font-weight: bold;">
+						<fmt:parseNumber var="totalPerItem" integerOnly="true"
+							type="number" value="${item.price * item.quantity}" />
+						${totalPerItem} đ
+					</div>
+				</div>
 			</div>
 		</c:forEach>
-
+		<div style="display: flex; margin-top: 50px;">
+			<div style="margin-left: 450px">Tổng cộng</div>
+			<div style="margin-left: 50px;" class="total">${total} đ</div>
+		</div>
 	</div>
 	<c:if test="${paginationResult.totalPages > 1}">
 		<div class="page-navigator">

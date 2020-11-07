@@ -45,8 +45,9 @@
 
 .dropdown-content {
 	display: none;
+	margin-top: 51px;
 	position: absolute;
-	background-color: #f1f1f1;
+	background-color: #e8e8e8;
 	min-width: 160px;
 	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 	z-index: 1;
@@ -140,13 +141,13 @@
 }
 </style>
 <script type="text/javascript">
-function  validation(){
-    var searchContent = document.getElementById("content").value;
-    if(searchContent==""){
-        return false;
-    }
-    return true;
-}
+	function validation() {
+		var searchContent = document.getElementById("content").value;
+		if (searchContent == "") {
+			return false;
+		}
+		return true;
+	}
 </script>
 </head>
 <div class="header-container">
@@ -158,10 +159,11 @@ function  validation(){
 					src="<c:url value='/images/BLAS.png'/>" /></a>
 			</div>
 			<div style="padding-top: 5px;">
-				<input value="${searchContent}" class="search-box" type="text" name="content" id="content"
-					placeholder="Tìm sản phẩm..." style="border-radius: 30px;">
-				<button class="add-to-cart btn btn-default" type="submit" onclick="return validation()">Tìm kiếm
-				</button>
+				<input value="${searchContent}" class="search-box" type="text"
+					name="content" id="content" placeholder="Tìm sản phẩm..."
+					style="border-radius: 30px;">
+				<button class="add-to-cart btn btn-default" type="submit"
+					onclick="return validation()">Tìm kiếm</button>
 			</div>
 			<div style="width: fit-content; margin-left: auto; margin-right: 5%;">
 				<c:if test="${pageContext.request.userPrincipal.name != null}">
@@ -180,11 +182,9 @@ function  validation(){
 							</div>
 						</div>
 						<div class="dropdown-content">
-							<a href="${pageContext.request.contextPath}/orderList">Đơn
-								hàng của tôi</a> <a
-								href="${pageContext.request.contextPath}/accountInfo">Tài
-								khoản của tôi</a> <a
-								href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
+							<a style="color: #393939;"href="${pageContext.request.contextPath}/orderList">Đơn hàng của tôi</a> 
+							<a style="color: #393939;" href="${pageContext.request.contextPath}/accountInfo">Tài khoản của tôi</a> 
+							<a style="color: #393939;" href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
 						</div>
 					</div>
 				</c:if>

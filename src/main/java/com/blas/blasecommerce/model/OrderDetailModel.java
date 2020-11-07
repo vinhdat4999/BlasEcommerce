@@ -6,6 +6,7 @@ public class OrderDetailModel {
 
 	private String id;
 	private String productId;
+	private String name;
 	private double price;
 	private int quantity;
 	private String orderId;
@@ -14,10 +15,21 @@ public class OrderDetailModel {
 		super();
 	}
 
+	public OrderDetailModel(String id, String productId, String name, double price, int quantity, String orderId) {
+		super();
+		this.id = id;
+		this.productId = productId;
+		this.name = name;
+		this.price = price;
+		this.quantity = quantity;
+		this.orderId = orderId;
+	}
+
 	public OrderDetailModel(String id, String productId, double price, int quantity, String orderId) {
 		super();
 		this.id = id;
 		this.productId = productId;
+		this.name = "";
 		this.price = price;
 		this.quantity = quantity;
 		this.orderId = orderId;
@@ -47,6 +59,14 @@ public class OrderDetailModel {
 		this.productId = productId;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public double getPrice() {
 		return price;
 	}
@@ -73,8 +93,8 @@ public class OrderDetailModel {
 
 	@Override
 	public String toString() {
-		return "OrderDetailModel [id=" + id + ", productId=" + productId + ", price=" + price + ", quantity=" + quantity
-				+ ", orderId=" + orderId + "]";
+		return "OrderDetailModel [id=" + id + ", productId=" + productId + ", name=" + name + ", price=" + price
+				+ ", quantity=" + quantity + ", orderId=" + orderId + "]";
 	}
 
 }
