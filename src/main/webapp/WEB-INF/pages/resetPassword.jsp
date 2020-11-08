@@ -27,8 +27,6 @@ body {
 	<jsp:include page="_header.jsp" />
 	<jsp:include page="_menu.jsp" />
 
-	<div class="page-title">Product</div>
-
 	<c:if test="${not empty errorMessage }">
 		<div class="error-message">${errorMessage}</div>
 	</c:if>

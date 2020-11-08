@@ -68,16 +68,11 @@
 .dropdown:hover .dropdown-content {
 	display: block;
 }
-/*.dropdown:hover .dropdown-content {
-	display: block;
-}*/
+
 .div4:hover .dropdown-content {
 	display: block;
 }
 
-/*.dropdown:hover .dropbtn {
-	background-color: #3e8e41;
-} */
 #div4 {
 	cursor: pointer;
 	float: right;
@@ -182,9 +177,12 @@
 							</div>
 						</div>
 						<div class="dropdown-content">
-							<a style="color: #393939;"href="${pageContext.request.contextPath}/orderList">Đơn hàng của tôi</a> 
-							<a style="color: #393939;" href="${pageContext.request.contextPath}/accountInfo">Tài khoản của tôi</a> 
-							<a style="color: #393939;" href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
+							<a style="color: #393939;"
+								href="${pageContext.request.contextPath}/orderList">Đơn hàng
+								của tôi</a> <a style="color: #393939;"
+								href="${pageContext.request.contextPath}/accountInfo">Tài
+								khoản của tôi</a> <a style="color: #393939;"
+								href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
 						</div>
 					</div>
 				</c:if>
@@ -203,7 +201,7 @@
 						height="50" src="<c:url value='/images/cart.png'/>" /></a>
 					<%
 						String numbersOfProductInCart = new NumberOfProduct().getNumbersOfProductInCart() + "";
-						pageContext.setAttribute("numbersOfProductInCart", numbersOfProductInCart);
+					pageContext.setAttribute("numbersOfProductInCart", numbersOfProductInCart);
 					%>
 					<span class="badge">${numbersOfProductInCart}</span>
 				</div>
