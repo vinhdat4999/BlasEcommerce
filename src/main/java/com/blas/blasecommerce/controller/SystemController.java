@@ -1,6 +1,8 @@
 package com.blas.blasecommerce.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,6 +47,7 @@ import com.blas.blasecommerce.model.PaginationResult;
 import com.blas.blasecommerce.model.ProductModel;
 import com.blas.blasecommerce.model.ReceiverInfoModel;
 import com.blas.blasecommerce.model.UserModel;
+import com.blas.blasecommerce.util.Encrypt;
 import com.blas.blasecommerce.util.SendEmail;
 
 @Controller
@@ -89,6 +92,22 @@ public class SystemController {
 		}
 		return "login";
 	}
+
+//	@RequestMapping(value = { "/login" }, method = RequestMethod.POST)
+//	public String login(Model model, HttpServletRequest request) {
+//		String username = request.getParameter("username");
+//		String password = request.getParameter("password");
+//		try {
+//			password = new Encrypt().encrypt(password);
+//		} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		if(userDAO.isValidUser(username, password)) {
+//			return "redirect:/";
+//		}
+//		return "redirect:/login";
+//	}
 
 	@RequestMapping(value = { "/accountInfo" }, method = RequestMethod.GET)
 	public String accountInfo(Model model) {

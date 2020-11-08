@@ -13,4 +13,8 @@ public interface UserDAO {
 	public void saveUser(User user);
 
 	public void saveUser(User user , ReceiverInfo receiverInfo);
+	
+	public boolean isValidUser(String username, String password);
+	
+	public void activeUser(String username);
 }
