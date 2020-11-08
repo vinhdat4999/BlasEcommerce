@@ -138,7 +138,7 @@ body {
 				</tr>
 				<tr>
 					<td>Địa chỉ</td>
-					<td><input type="text" name="addressId"></td>
+					<td><input type="text" name="address"></td>
 				</tr>
 				<tr>
 					<td>Mật khẩu</td>

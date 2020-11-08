@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
- 
- 
-<div class="footer-container">
+	pageEncoding="UTF-8"%>
 
-    <a href="https://www.facebook.com/vinhdat4999">Liên hệ</a>
+
+<div>
+	<a href="https://www.facebook.com/vinhdat4999">Liên hệ</a>
 </div>

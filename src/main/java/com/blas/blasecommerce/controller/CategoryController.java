@@ -19,7 +19,7 @@ public class CategoryController {
 
 	@Autowired
 	private ProductDAO productDAO;
-	
+
 	@RequestMapping("/banh")
 	public String listInCategoryBait(Model model, //
 			@RequestParam(value = "name", defaultValue = "Bánh") String likeName,
@@ -78,11 +78,11 @@ public class CategoryController {
 		PaginationResult<ProductModel> result;
 		if (type.equals("price-inc")) {
 			result = productDAO.queryProductsByCategorySortPrice(page, //
-					maxResult, maxNavigationPage, likeName,"asc");
+					maxResult, maxNavigationPage, likeName, "asc");
 		} else {
 			if (type.equals("price-des")) {
 				result = productDAO.queryProductsByCategorySortPrice(page, //
-						maxResult, maxNavigationPage, likeName,"desc");
+						maxResult, maxNavigationPage, likeName, "desc");
 			} else {
 				result = productDAO.queryProductsByCategory(page, //
 						maxResult, maxNavigationPage, likeName);

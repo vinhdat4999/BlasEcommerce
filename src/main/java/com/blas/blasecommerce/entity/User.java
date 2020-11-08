@@ -10,6 +10,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.blas.blasecommerce.model.UserModel;
+
 @Entity
 @Table(name = "user")
 public class User implements Serializable {
@@ -25,6 +27,38 @@ public class User implements Serializable {
 	private boolean active;
 	private String password;
 	private String userRole;
+
+	public User() {
+		super();
+	}
+
+	public User(String username, String firstname, String lastname, boolean gender, Date birthdate, String phoneNum,
+			String email, boolean active, String password, String userRole) {
+		super();
+		this.username = username;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.gender = gender;
+		this.birthdate = birthdate;
+		this.phoneNum = phoneNum;
+		this.email = email;
+		this.active = active;
+		this.password = password;
+		this.userRole = userRole;
+	}
+
+	public User(UserModel userModel) {
+		this.username = userModel.getUsername();
+		this.firstname = userModel.getFirstname();
+		this.lastname = userModel.getLastname();
+		this.gender = userModel.isGender();
+		this.birthdate = userModel.getBirthdate();
+		this.phoneNum = userModel.getPhoneNum();
+		this.email = userModel.getEmail();
+		this.active = userModel.isActive();
+		this.password = userModel.getPassword();
+		this.userRole = userModel.getUserRole();
+	}
 
 	@Id
 	@Column(name = "username", length = 20, nullable = false)
@@ -63,7 +97,7 @@ public class User implements Serializable {
 		this.gender = gender;
 	}
 
-    @Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "birthdate", nullable = false)
 	public Date getBirthdate() {
 		return birthdate;
