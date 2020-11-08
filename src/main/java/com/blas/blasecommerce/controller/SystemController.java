@@ -1,9 +1,11 @@
 package com.blas.blasecommerce.controller;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import javax.servlet.http.Cookie;
@@ -25,11 +27,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.blas.blasecommerce.dao.AuthenticationDAO;
 import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.OrderDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.dao.ReceiverInfoDAO;
 import com.blas.blasecommerce.dao.UserDAO;
+import com.blas.blasecommerce.entity.Authentication;
 import com.blas.blasecommerce.entity.Product;
 import com.blas.blasecommerce.entity.ReceiverInfo;
 import com.blas.blasecommerce.entity.User;
@@ -41,6 +45,7 @@ import com.blas.blasecommerce.model.PaginationResult;
 import com.blas.blasecommerce.model.ProductModel;
 import com.blas.blasecommerce.model.ReceiverInfoModel;
 import com.blas.blasecommerce.model.UserModel;
+import com.blas.blasecommerce.util.SendEmail;
 
 @Controller
 @Transactional
@@ -61,6 +66,9 @@ public class SystemController {
 
 	@Autowired
 	private ReceiverInfoDAO receiverInfoDAO;
+
+	@Autowired
+	private AuthenticationDAO authenticationDAO;
 
 	@RequestMapping("/403")
 	public String accessDenied() {
@@ -386,29 +394,65 @@ public class SystemController {
 		userModel.setUserRole("CUSTOMER");
 
 		User user = new User(userModel);
-		userDAO.saveUser(user);
 		String address = request.getParameter("address");
 		ReceiverInfoModel receiverInfoModel = new ReceiverInfoModel(UUID.randomUUID().toString(),
 				userModel.getUsername(), userModel.getFirstname() + " " + userModel.getLastname(),
 				userModel.getPhoneNum(), userModel.getEmail(), address);
-		receiverInfoDAO.save(new ReceiverInfo(receiverInfoModel));
+
+		userDAO.saveUser(user, new ReceiverInfo(receiverInfoModel));
 		return "redirect:/login";
 	}
 
 	@RequestMapping(value = { "/resetPassword" }, method = RequestMethod.GET)
-	public String resetPassword(HttpServletRequest request, HttpServletResponse response, Model model)
-			throws IOException {
+	public String resetPassword(HttpServletRequest request, Model model) throws IOException {
 		return "resetPassword";
 	}
-//
-//	@RequestMapping(value = { "/resetPassword" }, method = RequestMethod.POST)
-//	@Transactional(propagation = Propagation.NEVER)
-//	public String resetPassword(HttpServletRequest request, Model model) {
-//		
-//		String username = request.getParameter("username").trim();
-//		AccountInfo accountInfo = accountDAO.findAccountInfo(username);
-//		
-//		
-//		return "redirect:/login";
-//	}
+
+	@RequestMapping(value = { "/resetPassword" }, method = RequestMethod.POST)
+	@Transactional(propagation = Propagation.NEVER)
+	public String resetPassword(HttpServletRequest request, HttpServletResponse response, Model model) {
+		String username = request.getParameter("username").trim();
+		UserModel userModel = userDAO.findUserModel(username);
+		Random random = new Random();
+		int code = random.nextInt(900000) + 100000;
+		authenticationDAO.save(username, code + "");
+		new SendEmail().sendEmail(userModel.getEmail(), code + "");
+		Cookie cookie = new Cookie("resetPassUsername", username);
+		response.addCookie(cookie);
+		return "redirect:/new-password";
+	}
+
+	@RequestMapping(value = { "/new-password" }, method = RequestMethod.GET)
+	public String newPassword(@CookieValue(value = "resetPassUsername", defaultValue = "") String username,
+			HttpServletRequest request, Model model) throws IOException {
+		UserModel userModel = userDAO.findUserModel(username);
+		String email = userModel.getEmail();
+		String[] temp = email.split("@");
+		String temp2 = temp[0];
+		email = temp2.substring(0, temp2.length() - 4).concat("****");
+		email += "@" + temp[1];
+		model.addAttribute("email", email);
+		return "newPassword";
+	}
+
+	@RequestMapping(value = { "/new-password" }, method = RequestMethod.POST)
+	@Transactional(propagation = Propagation.NEVER)
+	public String newPassword(@CookieValue(value = "resetPassUsername", defaultValue = "") String username,
+			HttpServletRequest request, HttpServletResponse response, Model model) {
+		String code = request.getParameter("code");
+		String password = request.getParameter("retype");
+		if (authenticationDAO.isValidAuthentication(username, code)) {
+			UserModel userModel = userDAO.findUserModel(username);
+			userModel.setPassword(password);
+			userDAO.saveUser(new User(userModel));
+			Cookie cookie = new Cookie("resetPassUsername", null);
+			cookie.setMaxAge(0);
+			response.addCookie(cookie);
+			Authentication authentication = authenticationDAO.findAuthentication(username);
+			LocalDateTime expire = LocalDateTime.of(1900,1, 1, 1, 1, 1);
+			authentication.setTimeExpire(expire);
+			authenticationDAO.save(username, expire);
+		}
+		return "redirect:/login";
+	}
 }

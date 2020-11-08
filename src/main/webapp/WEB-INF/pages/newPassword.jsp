@@ -10,9 +10,9 @@
 <title>Product</title>
 <style>
 body {
-  font-family: 'open sans';
-  overflow-x: hidden; }
-
+	font-family: 'open sans';
+	overflow-x: hidden;
+}
 </style>
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700"
 	rel="stylesheet">
@@ -32,10 +32,13 @@ body {
 	</c:if>
 
 	<form:form method="POST">
+		<h3>Mã xác thực đã được gửi đến email ${email}. Mã xác thực sẽ hết
+			hạn trong 20 phút</h3>
 		<table style="text-align: left;">
 			<tr>
-				<td>Nhập tên tài khoản của bạn</td>
-				<td><input type="text" name="username"></td>
+				<td><input type="text" name="code"></td>
+				<td><input type="password" name="password"></td>
+				<td><input type="password" name="retype"></td>
 			</tr>
 			<tr>
 				<td><input type="submit" value="OK" /></td>
