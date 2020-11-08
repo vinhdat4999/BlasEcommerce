@@ -19,11 +19,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.blas.blasecommerce.dao.AuthenticationDAO;
 import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.OrderDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.dao.ReceiverInfoDAO;
 import com.blas.blasecommerce.dao.UserDAO;
+import com.blas.blasecommerce.dao.impl.AuthenticationDAOImpl;
 import com.blas.blasecommerce.dao.impl.CartDAOImpl;
 import com.blas.blasecommerce.dao.impl.OrderDAOImpl;
 import com.blas.blasecommerce.dao.impl.ProductDAOImpl;
@@ -134,6 +136,11 @@ public class ApplicationContextConfig {
    @Bean(name = "receiverInfoDAO")
    public ReceiverInfoDAO getReceiverInfoDAO() {
 	   return new ReceiverInfoDAOImpl();
+   }
+   
+   @Bean(name = "authenticationInfoDAO")
+   public AuthenticationDAO getAuthenticationDAO() {
+	   return new AuthenticationDAOImpl();
    }
  
 }

@@ -45,11 +45,11 @@ public class SendEmail {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(APP_EMAIL));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(RECEIVE_EMAIL));
-            message.setSubject("Ä�áº·t láº¡i máº­t kháº©u cá»§a báº¡n", "utf8");
+            message.setSubject("Đặt lại tài khoản BLAS", "utf8");
 
             // 3) create MimeBodyPart object and set your message text
             MimeBodyPart messageBodyPart1 = new MimeBodyPart();
-            String s = "Máº­t kháº©u má»›i tĂ i khoáº£n Blas cá»§a báº¡n lĂ  : " + code + ". HĂ£y Ä‘á»•i láº¡i máº­t kháº©u khĂ¡c an toĂ n hÆ¡n";
+            String s = "Vui lòng không tiết lộ mã xác thực cho bất kì ai. Mã xác thực sẽ hết hạn trong 20 phút. Mã xác thực tài khoản của bạn là  : " + code + ".";
             messageBodyPart1.setText(s, "utf8");
 
             // 4) create new MimeBodyPart object and set DataHandler object to this object
