@@ -63,4 +63,11 @@ public class ReceiverInfoDAOImpl implements ReceiverInfoDAO {
 		return new PaginationResult<ReceiverInfoModel>(query, page, maxResult, maxNavigationPage);
 	}
 
+	@Override
+	public void save(ReceiverInfo receiverInfo) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		session.persist(receiverInfo);
+	}
+
 }

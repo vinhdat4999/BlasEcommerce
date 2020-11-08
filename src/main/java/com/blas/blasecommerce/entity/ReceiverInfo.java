@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.blas.blasecommerce.model.ReceiverInfoModel;
+
 @Entity
 @Table(name = "receiverinfo")
 public class ReceiverInfo implements Serializable {
@@ -18,6 +20,30 @@ public class ReceiverInfo implements Serializable {
 	private String receiverPhone;
 	private String receiverEmail;
 	private String receiverAddress;
+
+	public ReceiverInfo() {
+		super();
+	}
+
+	public ReceiverInfo(String id, String username, String receiverName, String receiverPhone, String receiverEmail,
+			String receiverAddress) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.receiverName = receiverName;
+		this.receiverPhone = receiverPhone;
+		this.receiverEmail = receiverEmail;
+		this.receiverAddress = receiverAddress;
+	}
+
+	public ReceiverInfo(ReceiverInfoModel receiverInfoModel) {
+		this.id = receiverInfoModel.getId();
+		this.username = receiverInfoModel.getUsername();
+		this.receiverName = receiverInfoModel.getReceiverName();
+		this.receiverPhone = receiverInfoModel.getReceiverPhone();
+		this.receiverEmail = receiverInfoModel.getReceiverEmail();
+		this.receiverAddress = receiverInfoModel.getReceiverAddress();
+	}
 
 	@Id
 	@Column(name = "id", length = 50, nullable = false)

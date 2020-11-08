@@ -2,7 +2,9 @@ package com.blas.blasecommerce.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +31,8 @@ import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.dao.ReceiverInfoDAO;
 import com.blas.blasecommerce.dao.UserDAO;
 import com.blas.blasecommerce.entity.Product;
+import com.blas.blasecommerce.entity.ReceiverInfo;
+import com.blas.blasecommerce.entity.User;
 import com.blas.blasecommerce.model.CartDetailModel;
 import com.blas.blasecommerce.model.CartModel;
 import com.blas.blasecommerce.model.OrderDetailModel;
@@ -81,7 +86,7 @@ public class SystemController {
 	public String accountInfo(Model model) {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		UserModel userModel = userDAO.findUserModel(userDetails.getUsername());
-		
+
 		String username = "";
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof UserDetails) {
@@ -94,7 +99,7 @@ public class SystemController {
 		PaginationResult<ReceiverInfoModel> result = receiverInfoDAO.queryReceiverInfos(1, //
 				maxResult, maxNavigationPage, username);
 		model.addAttribute("paginationReceiverInfos", result);
-		
+
 		model.addAttribute("user", userModel);
 		return "accountInfo";
 	}
@@ -348,4 +353,62 @@ public class SystemController {
 		response.addCookie(cookie);
 		return "redirect:/shoppingCartFinalize";
 	}
+
+	@RequestMapping(value = { "/signup" }, method = RequestMethod.GET)
+	public String signup(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+		return "signup";
+	}
+
+	@RequestMapping(value = { "/signup" }, method = RequestMethod.POST)
+	@Transactional(propagation = Propagation.NEVER)
+	public String signup(HttpServletRequest request, Model model, //
+			@ModelAttribute("accountForm") @Validated UserModel userModel) {
+		String[] nameSplit = userModel.getLastname().split(" ");
+		String lastname = nameSplit[nameSplit.length - 1];
+		String firstname = "";
+		for (int i = 0; i < nameSplit.length - 1; i++) {
+			firstname += nameSplit[i] + " ";
+		}
+		userModel.setFirstname(firstname.trim());
+		userModel.setLastname(lastname);
+		String radioValue = request.getParameter("genderR");
+		if (radioValue.equals("Nam")) {
+			userModel.setGender(true);
+		} else {
+			userModel.setGender(false);
+		}
+		String day = request.getParameter("day");
+		String month = request.getParameter("month");
+		String year = request.getParameter("year");
+		Date date = new Date(Integer.parseInt(year) - 1900, Integer.parseInt(month) - 1, Integer.parseInt(day));
+		userModel.setBirthdate(date);
+		userModel.setActive(true);
+		userModel.setUserRole("CUSTOMER");
+
+		User user = new User(userModel);
+		userDAO.saveUser(user);
+		String address = request.getParameter("address");
+		ReceiverInfoModel receiverInfoModel = new ReceiverInfoModel(UUID.randomUUID().toString(),
+				userModel.getUsername(), userModel.getFirstname() + " " + userModel.getLastname(),
+				userModel.getPhoneNum(), userModel.getEmail(), address);
+		receiverInfoDAO.save(new ReceiverInfo(receiverInfoModel));
+		return "redirect:/login";
+	}
+
+	@RequestMapping(value = { "/resetPassword" }, method = RequestMethod.GET)
+	public String resetPassword(HttpServletRequest request, HttpServletResponse response, Model model)
+			throws IOException {
+		return "resetPassword";
+	}
+//
+//	@RequestMapping(value = { "/resetPassword" }, method = RequestMethod.POST)
+//	@Transactional(propagation = Propagation.NEVER)
+//	public String resetPassword(HttpServletRequest request, Model model) {
+//		
+//		String username = request.getParameter("username").trim();
+//		AccountInfo accountInfo = accountDAO.findAccountInfo(username);
+//		
+//		
+//		return "redirect:/login";
+//	}
 }
