@@ -3,12 +3,15 @@ package com.blas.blasecommerce.dao.impl;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blas.blasecommerce.dao.UserDAO;
+import com.blas.blasecommerce.entity.Cart;
 import com.blas.blasecommerce.entity.Product;
 import com.blas.blasecommerce.entity.ReceiverInfo;
 import com.blas.blasecommerce.entity.User;
@@ -62,6 +65,27 @@ public class UserDAOImpl implements UserDAO {
 		Session session = sessionFactory.getCurrentSession();
 		session.persist(user);
 		session.persist(receiverInfo);
+	}
+
+	@Override
+	public boolean isValidUser(String username, String password) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(User.class);
+		Criterion usernameCrit = Restrictions.eq("username", username);
+		Criterion passwordCrit = Restrictions.eq("password", password);
+		LogicalExpression andExp = Restrictions.and(usernameCrit, passwordCrit);
+		criteria.add(andExp);
+		User user = (User) criteria.uniqueResult();
+		if(user==null)
+			return false;
+		return true;
+	}
+
+	@Override
+	public void activeUser(String username) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
