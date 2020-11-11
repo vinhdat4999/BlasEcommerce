@@ -1,7 +1,9 @@
 package com.blas.blasecommerce.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,7 +22,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
-		// CĂ¡c User trong Database
 		auth.userDetailsService(authenticationService);
 
 	}
@@ -41,14 +42,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.authorizeRequests().and().formLogin()//
 
-				// Submit URL cá»§a trang login
 				.loginProcessingUrl("/j_spring_security_check") // Submit URL
 				.loginPage("/login")//
 				.defaultSuccessUrl("/")//
 				.failureUrl("/login?error=true")//
 				.usernameParameter("username")//
-				.passwordParameter("password")
-				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/");
+				.passwordParameter("password").and().logout().logoutUrl("/logout").logoutSuccessUrl("/");
 
 	}
 }

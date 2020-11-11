@@ -118,7 +118,6 @@ public class SystemController {
 	public String accountInfo(Model model) {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		UserModel userModel = userDAO.findUserModel(userDetails.getUsername());
-
 		String username = "";
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof UserDetails) {
@@ -488,7 +487,7 @@ public class SystemController {
 			cookie.setMaxAge(0);
 			response.addCookie(cookie);
 			Authentication authentication = authenticationDAO.findAuthentication(username);
-			LocalDateTime expire = LocalDateTime.of(1900,1, 1, 1, 1, 1);
+			LocalDateTime expire = LocalDateTime.of(1900, 1, 1, 1, 1, 1);
 			authentication.setTimeExpire(expire);
 			authenticationDAO.save(username, expire);
 		}
