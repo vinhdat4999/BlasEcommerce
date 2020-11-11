@@ -26,13 +26,14 @@ public class Product implements Serializable {
 	private String name;
 	private double price;
 	private String description;
+	private boolean isActive;
 
 	public Product() {
 		super();
 	}
 
 	public Product(String id, String category, Date createDate, byte[] image, String name, double price,
-			String description) {
+			String description, boolean isActive) {
 		super();
 		this.id = id;
 		this.category = category;
@@ -41,6 +42,7 @@ public class Product implements Serializable {
 		this.name = name;
 		this.price = price;
 		this.description = description;
+		this.isActive = isActive;
 	}
 
 	public Product(ProductModel productModel) {
@@ -51,6 +53,7 @@ public class Product implements Serializable {
 		this.name = productModel.getName();
 		this.price = productModel.getPrice();
 		this.description = productModel.getDescription();
+		this.isActive = productModel.isActive();
 	}
 
 	@Id
@@ -119,9 +122,20 @@ public class Product implements Serializable {
 		this.description = description;
 	}
 
+	@Column(name = "isActive")
+	public boolean isIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", category=" + category + ", createDate=" + createDate + ", image="
-				+ Arrays.toString(image) + ", name=" + name + ", price=" + price + ", description=" + description + "]";
+				+ Arrays.toString(image) + ", name=" + name + ", price=" + price + ", description=" + description
+				+ ", isActive=" + isActive + "]";
 	}
+
 }

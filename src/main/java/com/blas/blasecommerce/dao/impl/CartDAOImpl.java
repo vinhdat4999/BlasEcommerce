@@ -148,4 +148,19 @@ public class CartDAOImpl implements CartDAO {
 		query.executeUpdate();
 	}
 
+	@Override
+	public void deleteAllItemInCartByProduct(String productId) {
+		// TODO Auto-generated method stub
+		String sql = "select new " + CartModel.class.getName() + "(c.id, c.productId, c.quantity, c.username) from "
+				+ Cart.class.getName() + " c where c.productId = '" + productId + "'";
+		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery(sql);
+		List<CartModel> cartList = query.list();
+		for(CartModel i:cartList) {
+			if(i!=null) {
+				deleteItemInCart(i.getId());		
+			}
+		}
+	}
+
 }

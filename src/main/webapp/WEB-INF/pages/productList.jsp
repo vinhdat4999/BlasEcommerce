@@ -61,6 +61,25 @@ body {
 .add-to-cart:hover, .like:hover {
 	background: #18cfff;
 	color: #fff;
+	cursor: pointer;
+}
+
+.delete-product {
+	text-decoration: none;
+	background: #189fff;
+	padding: 1.2em 1.5em;
+	border: none;
+	text-transform: UPPERCASE;
+	font-weight: bold;
+	color: #fff;
+	-webkit-transition: background .3s ease;
+	transition: background .3s ease;
+}
+
+.delete-product:hover {
+	background: #18cfff;
+	color: #fff;
+	cursor: pointer;
 }
 
 #linkp {
@@ -104,6 +123,20 @@ li a:hover:not(.active) {
 	color: white;
 }
 </style>
+<script type="text/javascript">
+	function editProduct(productId) {
+		window.location.href = "${pageContext.request.contextPath}/editProduct?id="
+				+ productId;
+	}
+	function deleteProduct(productId) {
+		var txt;
+		var r = confirm("Bạn có chắc muốn xóa sản phẩm này không?");
+		if (r == true) {
+			window.location.href = "${pageContext.request.contextPath}/delete-product?productId="
+					+ productId;
+		}
+	}
+</script>
 </head>
 <body>
 	<script type="text/javascript">
@@ -137,63 +170,65 @@ li a:hover:not(.active) {
 
 	<fmt:setLocale value="en_US" scope="session" />
 	<div>
-		<div class="navigation" style="float: left; width: 20%; margin-top: 40px;">
+		<div class="navigation"
+			style="float: left; width: 20%; margin-top: 40px;">
 			<ul>
 				<li><a href="${pageContext.request.contextPath}/banh">Bánh</a></li>
 				<li><a href="${pageContext.request.contextPath}/keo">Kẹo</a></li>
-				<li><a href="${pageContext.request.contextPath}/nuoc-ngot">Nước ngọt</a></li>
+				<li><a href="${pageContext.request.contextPath}/nuoc-ngot">Nước
+						ngọt</a></li>
 			</ul>
 		</div>
 		<%
 			String type = pageContext.getRequest().getParameter("sort");
-			if (pageContext.getRequest().getParameter("sort") == null) {
-				pageContext.setAttribute("sortType", "Mặc định");
+		if (pageContext.getRequest().getParameter("sort") == null) {
+			pageContext.setAttribute("sortType", "Mặc định");
+		} else {
+			if (type.equals("price-des")) {
+				pageContext.setAttribute("sortType", "Giá: cao -> thấp");
 			} else {
-				if (type.equals("price-des")) {
-					pageContext.setAttribute("sortType", "Giá: cao -> thấp");
-				} else {
-					if (type.equals("price-inc")) {
-				pageContext.setAttribute("sortType", "Giá: thấp -> cao");
-					}
+				if (type.equals("price-inc")) {
+			pageContext.setAttribute("sortType", "Giá: thấp -> cao");
 				}
 			}
+		}
 		%>
 		<%
 			String s1 = request.getAttribute("javax.servlet.forward.request_uri").toString();
-			if (request.getAttribute("javax.servlet.forward.query_string") != null) {
-				String s2 = request.getAttribute("javax.servlet.forward.query_string").toString();
-				if (!s2.contains("sort=")) {
-					pageContext.setAttribute("defaultSort", s1 + "?" + s2);
-					pageContext.setAttribute("priceDes", s1 + "?" + s2 + "&sort=price-des");
-					pageContext.setAttribute("priceInc", s1 + "?" + s2 + "&sort=price-inc");
-				} else {
-					s2 = s2.replace("?sort=price-des", "");
-					s2 = s2.replace("?sort=price-inc", "");
-					s2 = s2.replace("&sort=price-des", "");
-					s2 = s2.replace("&sort=price-inc", "");
-					s2 = s2.replace("sort=price-des", "");
-					s2 = s2.replace("sort=price-inc", "");
-					if(!s2.equals("")){
-						s2 = "?" + s2;	
-					}
-					pageContext.setAttribute("defaultSort", s1 + s2);
-					if(s2.equals("")){
-						pageContext.setAttribute("priceDes", s1 + s2 + "?sort=price-des");
-						pageContext.setAttribute("priceInc", s1 + s2 + "?sort=price-inc");
-					}else{
-						pageContext.setAttribute("priceDes", s1 + s2 + "&sort=price-des");
-						pageContext.setAttribute("priceInc", s1 + s2 + "&sort=price-inc");	
-					}
-				}
+		if (request.getAttribute("javax.servlet.forward.query_string") != null) {
+			String s2 = request.getAttribute("javax.servlet.forward.query_string").toString();
+			if (!s2.contains("sort=")) {
+				pageContext.setAttribute("defaultSort", s1 + "?" + s2);
+				pageContext.setAttribute("priceDes", s1 + "?" + s2 + "&sort=price-des");
+				pageContext.setAttribute("priceInc", s1 + "?" + s2 + "&sort=price-inc");
 			} else {
-				if (request.getAttribute("javax.servlet.forward.servlet_path") == null) {
-					pageContext.setAttribute("defaultSort", request.getAttribute("javax.servlet.forward.context_path"));
-				} else {
-					pageContext.setAttribute("defaultSort", s1);
+				s2 = s2.replace("?sort=price-des", "");
+				s2 = s2.replace("?sort=price-inc", "");
+				s2 = s2.replace("&sort=price-des", "");
+				s2 = s2.replace("&sort=price-inc", "");
+				s2 = s2.replace("sort=price-des", "");
+				s2 = s2.replace("sort=price-inc", "");
+				if (!s2.equals("")) {
+			s2 = "?" + s2;
 				}
-				pageContext.setAttribute("priceDes", s1 + "?sort=price-des");
-				pageContext.setAttribute("priceInc", s1 + "?sort=price-inc");
+				pageContext.setAttribute("defaultSort", s1 + s2);
+				if (s2.equals("")) {
+			pageContext.setAttribute("priceDes", s1 + s2 + "?sort=price-des");
+			pageContext.setAttribute("priceInc", s1 + s2 + "?sort=price-inc");
+				} else {
+			pageContext.setAttribute("priceDes", s1 + s2 + "&sort=price-des");
+			pageContext.setAttribute("priceInc", s1 + s2 + "&sort=price-inc");
+				}
 			}
+		} else {
+			if (request.getAttribute("javax.servlet.forward.servlet_path") == null) {
+				pageContext.setAttribute("defaultSort", request.getAttribute("javax.servlet.forward.context_path"));
+			} else {
+				pageContext.setAttribute("defaultSort", s1);
+			}
+			pageContext.setAttribute("priceDes", s1 + "?sort=price-des");
+			pageContext.setAttribute("priceInc", s1 + "?sort=price-inc");
+		}
 		%>
 		<div style="float: left; width: 80%">
 			<div class="sort">
@@ -213,19 +248,23 @@ li a:hover:not(.active) {
 							href="${pageContext.request.contextPath}/product?id=${prodInfo.id}">
 							<ul>
 								<li><img class="product-image"
-						src="${pageContext.request.contextPath}/productImage?id=${prodInfo.id}" /></li>
+									src="${pageContext.request.contextPath}/productImage?id=${prodInfo.id}" /></li>
 								<li style="height: 75px;">${prodInfo.name}</li>
 								<fmt:parseNumber var="intValue" integerOnly="true" type="number"
 									value="${prodInfo.price}" />
 								<li><c:out value="${intValue}" /> đ</li>
-								<security:authorize access="hasRole('ROLE_ADMIN')">
-									<div style="margin-top: 50px;" class="action">
-										<a class="add-to-cart btn btn-default"
-											href="${pageContext.request.contextPath}/editProduct?id=${prodInfo.id}">Sửa</a>
-									</div>
-								</security:authorize>
 							</ul>
 						</a>
+						<security:authorize access="hasRole('ROLE_ADMIN')">
+							<div style="margin-left: 49px;" class="action">
+								<input style="width: auto;" class="add-to-cart btn btn-default"
+									type="button" value="Sửa"
+									onclick="editProduct('${prodInfo.id}')"> <input
+									class="add-to-cart btn btn-default" type="button"
+									style="background-color: red; width: auto;" value="Xóa"
+									onclick="deleteProduct('${prodInfo.id}')">
+							</div>
+						</security:authorize>
 					</div>
 				</c:forEach>
 

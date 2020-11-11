@@ -29,4 +29,6 @@ public interface ProductDAO {
 			String likeName, String sortType);
 
 	public void save(ProductModel ProductModel);
+	
+	public void disableProduct(String productId);
 }

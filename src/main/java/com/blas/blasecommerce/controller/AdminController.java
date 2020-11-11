@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.CategoryDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
 import com.blas.blasecommerce.dao.ProductImageDAO;
@@ -50,6 +51,9 @@ public class AdminController {
 	
 	@Autowired
 	private CategoryDAO categoryDAO;
+	
+	@Autowired
+	private CartDAO cartDAO;
 
 //	@RequestMapping(value = { "/createProduct" }, method = RequestMethod.GET)
 //	public String createProduct(Model model) {
@@ -177,6 +181,14 @@ public class AdminController {
 		ProductImageModel productImageModel = productImageDAO.findProductImageModel(imageId);
 		productImageDAO.deleteImage(imageId);
 		return "redirect:/editProduct?id=" + productImageModel.getProductId();
+	}
+
+	@RequestMapping("/delete-product")
+	public String deleteProduct(Model model, //
+			@RequestParam(value = "productId", defaultValue = "") String productId) {
+		productDAO.disableProduct(productId);
+		cartDAO.deleteAllItemInCartByProduct(productId);
+		return "redirect:/";
 	}
 
 	public static boolean isStringIsDoubleNumber(String s) {

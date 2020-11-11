@@ -14,13 +14,14 @@ public class ProductModel {
 	private String name;
 	private double price;
 	private String description;
+	private boolean isActive;
 
 	public ProductModel() {
 		super();
 	}
 
 	public ProductModel(String id, String category, Date createDate, CommonsMultipartFile image, String name,
-			double price, String description) {
+			double price, String description, boolean isActive) {
 		super();
 		this.id = id;
 		this.category = category;
@@ -29,9 +30,10 @@ public class ProductModel {
 		this.name = name;
 		this.price = price;
 		this.description = description;
+		this.isActive = isActive;
 	}
 
-	public ProductModel(String id, String category, Date createDate, String name, double price, String description) {
+	public ProductModel(String id, String category, Date createDate, String name, double price, String description, boolean isActive) {
 		super();
 		this.id = id;
 		this.category = category;
@@ -39,6 +41,7 @@ public class ProductModel {
 		this.name = name;
 		this.price = price;
 		this.description = description;
+		this.isActive = isActive;
 	}
 
 	public ProductModel(Product product) {
@@ -48,6 +51,7 @@ public class ProductModel {
 		this.name = product.getName();
 		this.price = product.getPrice();
 		this.description = product.getDescription();
+		this.isActive = product.isIsActive();
 	}
 
 	public String getId() {
@@ -106,10 +110,19 @@ public class ProductModel {
 		this.description = description;
 	}
 
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	@Override
 	public String toString() {
 		return "ProductModel [id=" + id + ", category=" + category + ", createDate=" + createDate + ", image=" + image
-				+ ", name=" + name + ", price=" + price + ", description=" + description + "]";
+				+ ", name=" + name + ", price=" + price + ", description=" + description + ", isActive=" + isActive
+				+ "]";
 	}
-
+	
 }
