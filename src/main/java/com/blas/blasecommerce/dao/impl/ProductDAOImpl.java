@@ -49,8 +49,8 @@ public class ProductDAOImpl implements ProductDAO {
 			String likeName) {
 		// TODO Auto-generated method stub
 		String sql = "Select new " + ProductModel.class.getName() //
-				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description) " + " from "//
-				+ Product.class.getName() + " p";
+				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description, p.isActive) " + " from "//
+				+ Product.class.getName() + " p where isActive=1";
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery(sql);
 		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
@@ -61,8 +61,8 @@ public class ProductDAOImpl implements ProductDAO {
 			String likeName) {
 		// TODO Auto-generated method stub
 		String sql = "Select new " + ProductModel.class.getName() //
-				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description) " + " from "//
-				+ Product.class.getName() + " p where p.category='" + likeName + "'";
+				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description, p.isActive) " + " from "//
+				+ Product.class.getName() + " p where p.category='" + likeName + "' and p.isActive=1";
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery(sql);
 		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
@@ -73,8 +73,9 @@ public class ProductDAOImpl implements ProductDAO {
 			int maxNavigationPage, String likeName, String sortType) {
 		// TODO Auto-generated method stub
 		String sql = "Select new " + ProductModel.class.getName() //
-				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description) " + " from "//
-				+ Product.class.getName() + " p where p.category='" + likeName + "' order by p.price " + sortType;
+				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description, p.isActive) " + " from "//
+				+ Product.class.getName() + " p where p.category='" + likeName + "' and p.isActive=1 order by p.price "
+				+ sortType;
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery(sql);
 		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
@@ -85,8 +86,9 @@ public class ProductDAOImpl implements ProductDAO {
 			String likeName) {
 		// TODO Auto-generated method stub
 		String sql = "Select new " + ProductModel.class.getName()
-				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description) " + "from "
-				+ Product.class.getName() + " p where p.name like '%" + likeName + "%' order by p.createDate desc";
+				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description, p.isActive) " + "from "
+				+ Product.class.getName() + " p where p.name like '%" + likeName
+				+ "%' and p.isActive=1 order by p.createDate desc";
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery(sql);
 		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
@@ -97,8 +99,9 @@ public class ProductDAOImpl implements ProductDAO {
 			String likeName, String sortType) {
 		// TODO Auto-generated method stub
 		String sql = "Select new " + ProductModel.class.getName() //
-				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description) " + " from "//
-				+ Product.class.getName() + " p where p.name like '%" + likeName + "%' order by p.price " + sortType;
+				+ "(p.id, p.category, p.createDate, p.name, p.price, p.description, p.isActive) " + " from "//
+				+ Product.class.getName() + " p where p.name like '%" + likeName
+				+ "%' and p.isActive=1 order by p.price " + sortType;
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery(sql);
 		return new PaginationResult<ProductModel>(query, page, maxResult, maxNavigationPage);
@@ -133,6 +136,15 @@ public class ProductDAOImpl implements ProductDAO {
 			sessionFactory.getCurrentSession().persist(product);
 		}
 		sessionFactory.getCurrentSession().flush();
+	}
+
+	@Override
+	public void disableProduct(String productId) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE " + Product.class.getName() + " set isActive = 0 WHERE id = '" + productId + "'";
+		Query query = session.createQuery(hql);
+		query.executeUpdate();
 	}
 
 }

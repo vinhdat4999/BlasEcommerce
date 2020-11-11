@@ -84,6 +84,10 @@ public class ClientController {
 		ProductModel productModel = null;
 		if (id != null) {
 			productModel = this.productDAO.findProductModel(id);
+			if(productModel==null || !productModel.isActive()) {
+				model.addAttribute("productNotFound", "true");
+				return "product";
+			}
 		}
 		if (productModel != null) {
 			String priceStr = String.format("%,d", (int) productModel.getPrice());

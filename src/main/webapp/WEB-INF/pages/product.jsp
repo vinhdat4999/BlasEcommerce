@@ -65,33 +65,42 @@
 
 	<jsp:include page="_header.jsp" />
 	<jsp:include page="_menu.jsp" />
-	<div class="container">
-		<div class="card">
-			<div class="container-fliud">
-				<div class="wrapper row">
-					<div class="preview col-md-6">
-						<div class="preview-pic tab-content">
-							<div class="zoom">
-								<div class="tab-pane active" id="pic-1">
-									<img class="product-image"
-										<%-- src="${pageContext.request.contextPath}/productImageMain?productId=${productInfo.id}" /> --%>
+	<c:if test="${productNotFound != null}">
+		<div>
+			<h2>Sản phẩm này không tồn tại hoặc đã bị xóa</h2>
+		</div>
+		<div>
+			<a href="${pageContext.request.contextPath}/">Về trang mua sắm</a>
+		</div>
+	</c:if>
+	<c:if test="${productNotFound == null}">
+		<div class="container">
+			<div class="card">
+				<div class="container-fliud">
+					<div class="wrapper row">
+						<div class="preview col-md-6">
+							<div class="preview-pic tab-content">
+								<div class="zoom">
+									<div class="tab-pane active" id="pic-1">
+										<img class="product-image"
+											<%-- src="${pageContext.request.contextPath}/productImageMain?productId=${productInfo.id}" /> --%>
 									src="${pageContext.request.contextPath}/productImage?id=${productInfo.id}" />
+									</div>
 								</div>
 							</div>
-						</div>
-						<ul class="preview-thumbnail nav nav-tabs">
-							<c:forEach items="${list}" var="item">
+							<ul class="preview-thumbnail nav nav-tabs">
+								<c:forEach items="${list}" var="item">
 									<li style="padding: 10px; border-style: groove;"><img
 										style="margin-bottom: 40px;" class="product-image"
 										src="${pageContext.request.contextPath}/image?id=${item.id}" />
 									</li>
-							</c:forEach>
-						</ul>
+								</c:forEach>
+							</ul>
 
-					</div>
-					<div class="details col-md-6">
-						<h3 class="product-title">${productInfo.name}</h3>
-						<!-- <div class="rating">
+						</div>
+						<div class="details col-md-6">
+							<h3 class="product-title">${productInfo.name}</h3>
+							<!-- <div class="rating">
 							<div class="stars">
 								<span class="fa fa-star checked"></span> <span
 									class="fa fa-star checked"></span> <span
@@ -101,12 +110,12 @@
 									style="text-decoration: none;" href="#">Xem 41 đánh giá</a></span>
 							</div>
 						</div> -->
-						<p class="product-description">${productInfo.description}</p>
-						<h4 class="price">
-							</li> <span>${price}đ</span>
-						</h4>
+							<p class="product-description">${productInfo.description}</p>
+							<h4 class="price">
+								</li> <span>${price}đ</span>
+							</h4>
 
-						<!-- <h5 class="sizes">
+							<!-- <h5 class="sizes">
 							sizes: <span class="size" data-toggle="tooltip" title="small">s</span>
 							<span class="size" data-toggle="tooltip" title="medium">m</span>
 							<span class="size" data-toggle="tooltip" title="large">l</span> <span
@@ -117,26 +126,27 @@
 								data-toggle="tooltip" title="Not In store"></span> <span
 								class="color green"></span> <span class="color blue"></span>
 						</h5> -->
-						<form method="post">
-							<div>
-								<div style="margin-bottom: 50px;">
-									<p class="label">Số Lượng</p>
-									<div>
-										<button name="btnDes" onclick="return desItem()">-</button>
-										<input type="text" name="quanityItem" id="quanityItem"
-											value="1" />
-										<button name="btnInc" onclick="return incItem()">+</button>
+							<form method="post">
+								<div>
+									<div style="margin-bottom: 50px;">
+										<p class="label">Số Lượng</p>
+										<div>
+											<button name="btnDes" onclick="return desItem()">-</button>
+											<input type="text" name="quanityItem" id="quanityItem"
+												value="1" />
+											<button name="btnInc" onclick="return incItem()">+</button>
+										</div>
 									</div>
+									<input type="submit" class="add-to-cart btn btn-default"
+										value="Thêm vào giỏ hàng">
 								</div>
-								<input type="submit" class="add-to-cart btn btn-default"
-									value="Thêm vào giỏ hàng">
-							</div>
 
-						</form>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</c:if>
 </body>
 </html>

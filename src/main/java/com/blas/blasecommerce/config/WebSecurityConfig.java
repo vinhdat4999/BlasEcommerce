@@ -36,7 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"/incItem", "/shoppingCartRemoveProduct", "/shipping", "/shipping-to")//
 				.access("hasAnyRole('ROLE_ADMIN', 'ROLE_CUSTOMER')");
 
-		http.authorizeRequests().antMatchers("/editProduct").access("hasRole('ROLE_ADMIN')");
+		http.authorizeRequests().antMatchers("/editProduct", "/createProduct", "/delete-image", "/delete-product")
+				.access("hasRole('ROLE_ADMIN')");
 
 		http.authorizeRequests().and().exceptionHandling().accessDeniedPage("/403");
 
