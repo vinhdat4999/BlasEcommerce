@@ -33,10 +33,12 @@ import com.blas.blasecommerce.dao.AuthenticationDAO;
 import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.OrderDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
+import com.blas.blasecommerce.dao.ProductImageDAO;
 import com.blas.blasecommerce.dao.ReceiverInfoDAO;
 import com.blas.blasecommerce.dao.UserDAO;
 import com.blas.blasecommerce.entity.Authentication;
 import com.blas.blasecommerce.entity.Product;
+import com.blas.blasecommerce.entity.ProductImage;
 import com.blas.blasecommerce.entity.ReceiverInfo;
 import com.blas.blasecommerce.entity.User;
 import com.blas.blasecommerce.model.CartDetailModel;
@@ -72,6 +74,9 @@ public class SystemController {
 
 	@Autowired
 	private AuthenticationDAO authenticationDAO;
+	
+	@Autowired
+	private ProductImageDAO productImageDAO;
 
 	@RequestMapping("/403")
 	public String accessDenied() {
@@ -120,6 +125,7 @@ public class SystemController {
 			username = ((UserDetails) principal).getUsername();
 		} else {
 			username = principal.toString();
+			
 		}
 		final int maxResult = 1000;
 		final int maxNavigationPage = 1000;
@@ -129,6 +135,20 @@ public class SystemController {
 
 		model.addAttribute("user", userModel);
 		return "accountInfo";
+	}
+
+	@RequestMapping(value = { "/image" }, method = RequestMethod.GET)
+	public void image(HttpServletRequest request, HttpServletResponse response, Model model,
+			@RequestParam("id") String imageId) throws IOException {
+		ProductImage productImage = null;
+		if (imageId != null) {
+			productImage = productImageDAO.findProductImage(imageId);
+		}
+		if (productImage != null && productImage.getImage() != null) {
+			response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
+			response.getOutputStream().write(productImage.getImage());
+		}
+		response.getOutputStream().close();
 	}
 
 	@RequestMapping(value = { "/productImage" }, method = RequestMethod.GET)

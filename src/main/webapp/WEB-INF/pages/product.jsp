@@ -17,6 +17,18 @@
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/productStyle.css">
 <style>
+.zoom {
+	padding: 50px;
+	transition: transform .2s;
+	margin: 0 auto;
+}
+
+.zoom:hover {
+	transform: scale(2);
+	margin-top: 65px;
+	height: 210px;
+}
+
 #linkp {
 	flex-direction: column;
 	text-decoration: none;
@@ -59,26 +71,20 @@
 				<div class="wrapper row">
 					<div class="preview col-md-6">
 						<div class="preview-pic tab-content">
-							<div class="tab-pane active" id="pic-1">
-								<img class="product-image"
-									<%-- src="${pageContext.request.contextPath}/productImageMain?productId=${productInfo.id}" /> --%>
+							<div class="zoom">
+								<div class="tab-pane active" id="pic-1">
+									<img class="product-image"
+										<%-- src="${pageContext.request.contextPath}/productImageMain?productId=${productInfo.id}" /> --%>
 									src="${pageContext.request.contextPath}/productImage?id=${productInfo.id}" />
+								</div>
 							</div>
 						</div>
 						<ul class="preview-thumbnail nav nav-tabs">
-							<c:forEach items="${listLink}" var="item">
-								<%-- <li style="padding-left: 50px;"><img
-									style="margin-bottom: 40px;" class="product-image"
-									src="${pageContext.request.contextPath}/productImage?id=${item.id}" />
-									<form:input type="file" path="image" /> <a
-									style="margin-right: 50px; margin-left: -50px;"
-									class="add-to-cart btn btn-default"
-									href="${pageContext.request.contextPath}/editProduct?id=${prodInfo.id}">Xóa</a>
-								</li> --%>
-								<li class="active"><a data-target="#pic-1"
-									data-toggle="tab"><img
-										src="${pageContext.request.contextPath}/productImage?id=${item.id}" /></a></li>
-
+							<c:forEach items="${list}" var="item">
+									<li style="padding: 10px; border-style: groove;"><img
+										style="margin-bottom: 40px;" class="product-image"
+										src="${pageContext.request.contextPath}/image?id=${item.id}" />
+									</li>
 							</c:forEach>
 						</ul>
 
@@ -117,7 +123,8 @@
 									<p class="label">Số Lượng</p>
 									<div>
 										<button name="btnDes" onclick="return desItem()">-</button>
-										<input type="text" name="quanityItem" id="quanityItem" value="1"/>
+										<input type="text" name="quanityItem" id="quanityItem"
+											value="1" />
 										<button name="btnInc" onclick="return incItem()">+</button>
 									</div>
 								</div>

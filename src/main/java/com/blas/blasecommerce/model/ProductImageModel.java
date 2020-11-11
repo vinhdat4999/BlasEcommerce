@@ -14,6 +14,11 @@ public class ProductImageModel {
 		super();
 	}
 
+	public ProductImageModel(String id, String productId) {
+		this.id = id;
+		this.productId = productId;
+	}
+
 	public ProductImageModel(String id, String productId, CommonsMultipartFile image) {
 		super();
 		this.id = id;

@@ -21,14 +21,18 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.blas.blasecommerce.dao.AuthenticationDAO;
 import com.blas.blasecommerce.dao.CartDAO;
+import com.blas.blasecommerce.dao.CategoryDAO;
 import com.blas.blasecommerce.dao.OrderDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
+import com.blas.blasecommerce.dao.ProductImageDAO;
 import com.blas.blasecommerce.dao.ReceiverInfoDAO;
 import com.blas.blasecommerce.dao.UserDAO;
 import com.blas.blasecommerce.dao.impl.AuthenticationDAOImpl;
 import com.blas.blasecommerce.dao.impl.CartDAOImpl;
+import com.blas.blasecommerce.dao.impl.CategoryDAOImpl;
 import com.blas.blasecommerce.dao.impl.OrderDAOImpl;
 import com.blas.blasecommerce.dao.impl.ProductDAOImpl;
+import com.blas.blasecommerce.dao.impl.ProductImageDAOImpl;
 import com.blas.blasecommerce.dao.impl.ReceiverInfoDAOImpl;
 import com.blas.blasecommerce.dao.impl.UserDAOImpl;
 
@@ -138,9 +142,19 @@ public class ApplicationContextConfig {
 	   return new ReceiverInfoDAOImpl();
    }
    
-   @Bean(name = "authenticationInfoDAO")
+   @Bean(name = "authenticationDAO")
    public AuthenticationDAO getAuthenticationDAO() {
 	   return new AuthenticationDAOImpl();
+   }
+   
+   @Bean(name = "productImageDAO")
+   public ProductImageDAO getProductImageDAO() {
+	   return new ProductImageDAOImpl();
+   }
+   
+   @Bean(name = "categoryDAO")
+   public CategoryDAO getCategoryDAO() {
+	   return new CategoryDAOImpl();
    }
  
 }

@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/main/java/com/blas/blasecommerce/config/WebSecurityConfig.java=UTF-8
+encoding//src/main/java/com/blas/blasecommerce/controller/AdminController.java=UTF-8
 encoding//src/main/java/com/blas/blasecommerce/controller/CategoryController.java=UTF-8
 encoding//src/main/java/com/blas/blasecommerce/dao/impl/AuthenticationDAOImpl.java=UTF-8
 encoding//src/main/java/com/blas/blasecommerce/dao/impl/OrderDAOImpl.java=UTF-8

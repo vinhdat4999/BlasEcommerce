@@ -18,6 +18,17 @@ public class ProductImage implements Serializable {
 	private String productId;
 	private byte[] image;
 
+	public ProductImage() {
+		super();
+	}
+
+	public ProductImage(String id, String productId, byte[] image) {
+		super();
+		this.id = id;
+		this.productId = productId;
+		this.image = image;
+	}
+
 	@Id
 	@Column(name = "id", length = 50, nullable = false)
 	public String getId() {

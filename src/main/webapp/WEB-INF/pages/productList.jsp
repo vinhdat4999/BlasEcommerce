@@ -201,9 +201,6 @@ li a:hover:not(.active) {
 				Sắp xếp <select name="categoryId" id="categoryId"
 					onchange="location = this.value;">
 					<option value="" hidden selected>${sortType}</option>
-					<%-- <option
-						value="${requestScope['javax.servlet.forward.request_uri']}">Mặc
-						định</option> --%>
 					<option value="${defaultSort}">Mặc định</option>
 					<option value="${priceDes}">Giá: cao -> thấp</option>
 					<option value="${priceInc}">Giá: thấp -> cao</option>
@@ -216,7 +213,6 @@ li a:hover:not(.active) {
 							href="${pageContext.request.contextPath}/product?id=${prodInfo.id}">
 							<ul>
 								<li><img class="product-image"
-									<%-- src="${pageContext.request.contextPath}/productImageMain?productId=${prodInfo.id}" /></li> --%>
 						src="${pageContext.request.contextPath}/productImage?id=${prodInfo.id}" /></li>
 								<li style="height: 75px;">${prodInfo.name}</li>
 								<fmt:parseNumber var="intValue" integerOnly="true" type="number"

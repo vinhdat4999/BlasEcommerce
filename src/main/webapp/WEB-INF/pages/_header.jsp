@@ -179,9 +179,15 @@
 						<div class="dropdown-content">
 							<a style="color: #393939;"
 								href="${pageContext.request.contextPath}/orderList">Đơn hàng
-								của tôi</a> <a style="color: #393939;"
+								của tôi</a> 
+							<a style="color: #393939;"
 								href="${pageContext.request.contextPath}/accountInfo">Tài
-								khoản của tôi</a> <a style="color: #393939;"
+								khoản của tôi</a>
+							<security:authorize access="hasAnyRole('ROLE_ADMIN')">
+								<a style="color: #393939;"
+									href="${pageContext.request.contextPath}/create-product">Thêm sản phẩm</a>
+   							</security:authorize>
+							<a style="color: #393939;"
 								href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
 						</div>
 					</div>

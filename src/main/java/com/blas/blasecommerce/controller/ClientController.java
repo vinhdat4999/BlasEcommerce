@@ -1,6 +1,7 @@
 package com.blas.blasecommerce.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -21,8 +22,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.blas.blasecommerce.dao.CartDAO;
 import com.blas.blasecommerce.dao.OrderDAO;
 import com.blas.blasecommerce.dao.ProductDAO;
+import com.blas.blasecommerce.dao.ProductImageDAO;
 import com.blas.blasecommerce.dao.UserDAO;
 import com.blas.blasecommerce.model.PaginationResult;
+import com.blas.blasecommerce.model.ProductImageModel;
 import com.blas.blasecommerce.model.ProductModel;
 
 @Controller
@@ -34,6 +37,9 @@ public class ClientController {
 
 	@Autowired
 	private ProductDAO productDAO;
+
+	@Autowired
+	private ProductImageDAO productImageDAO;
 
 	@RequestMapping("/")
 	public String listProductHandler(@CookieValue(value = "receiverInfo", defaultValue = "") String receiverInfoId,
@@ -81,11 +87,8 @@ public class ClientController {
 		}
 		if (productModel != null) {
 			String priceStr = String.format("%,d", (int) productModel.getPrice());
-//			List<ProductImageModel> listLink = productImageDAO.getListLinkImage(id);
-//			if (listLink.size() > 0) {
-//				listLink.remove(0);
-//			}
-//			model.addAttribute("listLink", listLink);
+			List<ProductImageModel> list = productImageDAO.getImageIdList(id);
+			model.addAttribute("list", list);
 			model.addAttribute("price", priceStr);
 			model.addAttribute("productInfo", productModel);
 		}

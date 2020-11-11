@@ -126,6 +126,7 @@ public class ProductDAOImpl implements ProductDAO {
 				}
 			}
 			product.setName(productModel.getName());
+			product.setCategory(productModel.getCategory());
 			product.setPrice(productModel.getPrice());
 			product.setDescription(productModel.getDescription());
 		} else {
