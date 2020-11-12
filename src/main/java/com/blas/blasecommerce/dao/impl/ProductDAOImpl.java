@@ -132,6 +132,7 @@ public class ProductDAOImpl implements ProductDAO {
 			product.setCategory(productModel.getCategory());
 			product.setPrice(productModel.getPrice());
 			product.setDescription(productModel.getDescription());
+			product.setIsActive(true);
 		} else {
 			sessionFactory.getCurrentSession().persist(product);
 		}
