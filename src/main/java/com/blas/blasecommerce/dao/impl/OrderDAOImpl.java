@@ -56,6 +56,7 @@ public class OrderDAOImpl implements OrderDAO {
 			order.setDescription(productModel2.getName() + " và " + (cartList.size() - 1) + " sản phẩm khác");
 		}
 		Session session = sessionFactory.getCurrentSession();
+		System.out.println("order: " + order.toString());
 		session.persist(order);
 		OrderDetail orderDetail = null;
 		for (CartModel cartInfo : cartList) {
