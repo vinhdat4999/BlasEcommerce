@@ -55,49 +55,58 @@ public class AdminController {
 	@Autowired
 	private CartDAO cartDAO;
 
-//	@RequestMapping(value = { "/createProduct" }, method = RequestMethod.GET)
-//	public String createProduct(Model model) {
-//		model.addAttribute("productId", UUID.randomUUID().toString());
-//		model.addAttribute("categoryList",categoryDAO.getCategoryList());
-//		return "createProduct";
-//	}
-//
-//	@RequestMapping(value = { "/createProduct" }, method = RequestMethod.POST)
-//	@Transactional(propagation = Propagation.NEVER)
-//	public String productSaveNew(HttpServletRequest request, Model model, //
-//			@ModelAttribute("productForm") @Validated ProductInfo productInfo) {
-//		boolean hasError = false;
-//		if (productInfo.getName().trim().length() == 0) {
-//			hasError = true;
-//			model.addAttribute("nameError", "Please input product name");
-//		}
-//		String priceSt = request.getParameter("priceSt").toString();
-//		if (priceSt == null || priceSt.length() == 0) {
-//			hasError = true;
-//			model.addAttribute("priceError", "Please input price");
-//		} else {
-//			if (!isStringIsDoubleNumber(priceSt)) {
-//				hasError = true;
-//				model.addAttribute("priceError", "Please input price include number");
-//			}
-//		}
-//		if (hasError) {
-//			model.addAttribute("productId", UUID.randomUUID().toString());
-//			return "createProduct";
-//		} else {
-//			String category = request.getParameter("categoryId");
-//			LocalDate localDate = java.time.LocalDate.now();
-//			Date date = new Date(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth());
-//			ProductInfo productInfo2 = new ProductInfo(productInfo.getId(), category, date, null, productInfo.getName(),
-//					Double.parseDouble(priceSt), "m", productInfo.getDescription());
-//			productInfo2.setImage(productInfo.getImage());
-//			productDAO.save(productInfo2);
-//			
-//			ProductImageInfo productImageInfo = new ProductImageInfo(UUID.randomUUID().toString(), productInfo.getId(), productInfo.getImage());
-//			productImageDAO.save(productImageInfo);
-//			return "redirect:/";
-//		}
-//	}
+	@RequestMapping(value = { "/createProduct" }, method = RequestMethod.GET)
+	public String createProduct(Model model) {
+		model.addAttribute("productId", UUID.randomUUID().toString());
+		model.addAttribute("categoryList",categoryDAO.getCategoryList());
+		UploadImage myUploadForm = new UploadImage();
+		model.addAttribute("myUploadForm", myUploadForm);
+		return "createProduct";
+	}
+
+	@RequestMapping(value = { "/createProduct" }, method = RequestMethod.POST)
+	@Transactional(propagation = Propagation.NEVER)
+	public String productSaveNew(HttpServletRequest request, Model model, //
+			@ModelAttribute("myUploadForm") @Validated ProductModel productModel, UploadImage uploadImage) {
+		System.out.println("product: " + productModel.toString());
+		boolean hasError = false;
+		if (productModel.getName().trim().length() == 0) {
+			hasError = true;
+			model.addAttribute("nameError", "Please input product name");
+		}
+		String priceSt = request.getParameter("priceSt").toString();
+		if (priceSt == null || priceSt.length() == 0) {
+			hasError = true;
+			model.addAttribute("priceError", "Please input price");
+		} else {
+			if (!isStringIsDoubleNumber(priceSt)) {
+				hasError = true;
+				model.addAttribute("priceError", "Please input price include number");
+			}
+		}
+		if (hasError) {
+			model.addAttribute("productId", UUID.randomUUID().toString());
+			return "createProduct";
+		} else {
+			LocalDate localDate = java.time.LocalDate.now();
+			Date date = new Date(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth());
+			ProductModel productModel2 = new ProductModel(productModel.getId(), productModel.getCategory(), date, productModel.getName(), productModel.getPrice(),productModel.getDescription(),productModel.isActive()); 
+			productModel2.setImage(productModel.getImage());
+			productModel2.setPrice(Double.parseDouble(priceSt));
+			productModel2.setActive(true);
+			productDAO.save(productModel2);
+
+
+			CommonsMultipartFile[] fileDatas = uploadImage.getFileDatas();
+			for (CommonsMultipartFile fileData : fileDatas) {
+				if (fileData.getSize() != 0) {
+					ProductImage temp = new ProductImage(UUID.randomUUID().toString(), productModel2.getId(), fileData.getBytes());
+					productImageDAO.addImage(temp);
+				}
+			}
+			return "redirect:/";
+		}
+	}
 
 	@RequestMapping(value = { "/editProduct" }, method = RequestMethod.GET)
 	public String product(Model model, @RequestParam(value = "id", defaultValue = "") String id) {
@@ -149,7 +158,7 @@ public class AdminController {
 			productModel2.setPrice(Double.parseDouble(priceSt));
 			productModel2.setImage(productModel.getImage());
 			productModel2.setDescription(productModel.getDescription());
-			System.out.println("product2: " + productModel2.toString());
+//			productModel2.setActive(true);
 			productDAO.save(productModel2);
 			
 			//save sub image

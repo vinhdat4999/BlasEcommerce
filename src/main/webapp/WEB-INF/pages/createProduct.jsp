@@ -14,6 +14,31 @@ body {
 	font-family: 'open sans';
 	overflow-x: hidden;
 }
+.add-to-cart {
+	text-decoration: none;
+	background: #189fff;
+	padding: 0.7em 0.7em;
+	border: none;
+	text-transform: UPPERCASE;
+	color: #fff;
+	-webkit-transition: background .3s ease;
+	transition: background .3s ease;
+}
+
+.group-container {
+	display: flex;
+	padding: 5px;
+}
+
+body {
+	font-family: 'open sans';
+	overflow-x: hidden;
+}
+
+.title-container {
+	width: 200px;
+	text-align: left;
+}
 </style>
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700"
 	rel="stylesheet">
@@ -33,7 +58,7 @@ body {
 	<c:if test="${not empty errorMessage }">
 		<div class="error-message">${errorMessage}</div>
 	</c:if>
-
+<%-- 
 	<form:form modelAttribute="productForm" method="POST"
 		enctype="multipart/form-data">
 		<table style="text-align: left;">
@@ -55,9 +80,9 @@ body {
 			</tr>
 			<tr>
 				<td>Category</td>
-				<td><select name="categoryId" id="categoryId">
+				<td><select name="category" id="category">
 						<c:forEach items="${categoryList}" var="item">
-							<option>${item}</option>	
+							<option>${item.category}</option>	
 						</c:forEach>
 				</select></td>
 			</tr>
@@ -90,7 +115,97 @@ body {
 	</form:form>
 
 
-
+ --%>
+	<form:form name="productDetail" modelAttribute="productForm"
+		method="POST" enctype="multipart/form-data">
+		<div>
+			<div style="display: flex; border-style: groove;">
+				<div style="padding: 30px; width: 60%;">
+					<div class="group-container">
+						<div class="title-container">Mã sản phẩm</div>
+						<div>
+							<input style="color: red;" readonly type="text" id="id"
+								name="id" value="${productId}">
+						</div>
+						<div>
+							<form:errors path="id" class="error-message" />
+						</div>
+					</div>
+					<div class="group-container">
+						<div class="title-container">Tên sản phẩm</div>
+						<div>
+							<input style="width: 430px;" type="text" name="name" id="name">
+						</div>
+						<div>
+							<form:errors class="error-message" />${nameError}
+						</div>
+					</div>
+					<div class="group-container">
+						<div class="title-container">Danh mục sản phẩm</div>
+						<div>
+							<select name="category" id="category">
+								<c:forEach items="${categoryList}" var="item">
+									<option>${item.category}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+					<div class="group-container">
+						<div class="title-container">Giá</div>
+						<div>
+							<input id="priceSt" name="priceSt" type="text"/>
+						</div>
+						<div>
+							<form:errors class="error-message" />${priceError}
+						</div>
+					</div>
+					<div class="group-container">
+						<div class="title-container">Mô tả</div>
+						<div>
+							<textarea rows="5" name="description" id="description" cols="50"></textarea>
+						</div>
+					</div>
+				</div>
+				<div style="display: inline;" class="group-container">
+					<div style="text-align: center; width: 100%;"
+						class="title-container">Ảnh chính sản phẩm</div>
+					<div class="preview-thumbnail nav nav-tabs">
+						<img style="height: 150px;"
+							src="${pageContext.request.contextPath}/productImage?id=${productForm.id}" />
+						<%-- <form:input type="file" name="image" path="image" /> --%>
+						<input type="file" id="image" name="image">
+					</div>
+				</div>
+			</div>
+			<div style="display: inline;" class="group-container">
+				<div style="text-align: center; width: 100%;"
+					class="title-container">Ảnh phụ sản phẩm</div>
+				<div style="display: inline;" class="preview-thumbnail nav nav-tabs">
+					<form:form modelAttribute="myUploadForm" method="POST" action=""
+						enctype="multipart/form-data">
+							<div>
+								<form:input path="fileDatas" type="file" />
+							</div>
+							<div>
+								<form:input path="fileDatas" type="file" />
+							</div>
+							<div>
+								<form:input path="fileDatas" type="file" />
+							</div>
+							<div>
+								<form:input path="fileDatas" type="file" />
+							</div>
+							<div>
+								<form:input path="fileDatas" type="file" />
+							</div>
+					</form:form>
+				</div>
+			</div>
+			<div style="padding-bottom: 100px;">
+				<input class="add-to-cart btn btn-default" type="submit" value="Thêm" />
+			</div>
+		</div>
+	</form:form>
 
 	<jsp:include page="_footer.jsp" />
 

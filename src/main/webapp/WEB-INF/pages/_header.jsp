@@ -185,7 +185,7 @@
 								khoản của tôi</a>
 							<security:authorize access="hasAnyRole('ROLE_ADMIN')">
 								<a style="color: #393939;"
-									href="${pageContext.request.contextPath}/create-product">Thêm sản phẩm</a>
+									href="${pageContext.request.contextPath}/createProduct">Thêm sản phẩm</a>
    							</security:authorize>
 							<a style="color: #393939;"
 								href="${pageContext.request.contextPath}/logout">Đăng xuất</a>
