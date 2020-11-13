@@ -18,13 +18,13 @@ public class SendEmail {
     public void sendEmail(String email, String code) {
         String HOST_NAME = "smtp.gmail.com";
 
-        int SSL_PORT = 465; // Port for SSL
+        final int SSL_PORT = 465; // Port for SSL
 
-        int TSL_PORT = 587; // Port for TLS/STARTTLS
+        final int TSL_PORT = 587; // Port for TLS/STARTTLS
 
-        String APP_EMAIL = "blascoffeevn@gmail.com"; // your email
+        final String APP_EMAIL = "blascoffeevn@gmail.com"; // your email
 
-        String APP_PASSWORD = "0546550566Qq"; // your password
+        final String APP_PASSWORD = "0546550566Qq"; // your password
         String RECEIVE_EMAIL = email;
         // 1) get the session object
         Properties props = new Properties();
