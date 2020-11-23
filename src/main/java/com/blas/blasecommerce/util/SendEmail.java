@@ -15,7 +15,7 @@ import javax.mail.internet.MimeMultipart;
 
 public class SendEmail {
 
-    public void sendEmail(String email, String code) {
+    public void sendEmail(String email, String title, String content) {
         String HOST_NAME = "smtp.gmail.com";
 
         final int SSL_PORT = 465; // Port for SSL
@@ -45,12 +45,12 @@ public class SendEmail {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(APP_EMAIL));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(RECEIVE_EMAIL));
-            message.setSubject("Đặt lại tài khoản BLAS", "utf8");
+            message.setSubject(title, "utf8");
 
             // 3) create MimeBodyPart object and set your message text
             MimeBodyPart messageBodyPart1 = new MimeBodyPart();
-            String s = "Vui lòng không tiết lộ mã xác thực cho bất kì ai. Mã xác thực sẽ hết hạn trong 20 phút. Mã xác thực tài khoản của bạn là  : " + code + ".";
-            messageBodyPart1.setText(s, "utf8");
+//            messageBodyPart1.setText(content, "utf8");
+            messageBodyPart1.setContent(content, "text/html; charset=utf-8");
 
             // 4) create new MimeBodyPart object and set DataHandler object to this object
             Multipart multipart = new MimeMultipart();

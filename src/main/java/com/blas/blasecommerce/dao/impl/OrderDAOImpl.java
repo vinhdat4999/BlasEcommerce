@@ -34,7 +34,7 @@ public class OrderDAOImpl implements OrderDAO {
 	private ProductDAO productDAO;
 
 	@Override
-	public void saveOrder(String username,  String receiverInfoId) {
+	public String saveOrder(String username,  String receiverInfoId) {
 		// TODO Auto-generated method stub
 		Orders order = new Orders();
 		String orderId = UUID.randomUUID().toString();
@@ -69,6 +69,7 @@ public class OrderDAOImpl implements OrderDAO {
 			orderDetail.setOrderId(orderId);
 			session.persist(orderDetail);
 		}
+		return orderId;
 	}
 
 	@Override

@@ -1,9 +1,8 @@
 package com.blas.blasecommerce.controller;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +48,6 @@ import com.blas.blasecommerce.model.PaginationResult;
 import com.blas.blasecommerce.model.ProductModel;
 import com.blas.blasecommerce.model.ReceiverInfoModel;
 import com.blas.blasecommerce.model.UserModel;
-import com.blas.blasecommerce.util.Encrypt;
 import com.blas.blasecommerce.util.SendEmail;
 
 @Controller
@@ -74,7 +72,7 @@ public class SystemController {
 
 	@Autowired
 	private AuthenticationDAO authenticationDAO;
-	
+
 	@Autowired
 	private ProductImageDAO productImageDAO;
 
@@ -124,7 +122,7 @@ public class SystemController {
 			username = ((UserDetails) principal).getUsername();
 		} else {
 			username = principal.toString();
-			
+
 		}
 		final int maxResult = 1000;
 		final int maxNavigationPage = 1000;
@@ -269,24 +267,6 @@ public class SystemController {
 		return "orderList";
 	}
 
-	@RequestMapping(value = { "/shoppingCartFinalize" }, method = RequestMethod.GET)
-	public String shoppingCartFinalize(HttpServletRequest request, Model model) {
-
-		String username = "";
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof UserDetails) {
-			username = ((UserDetails) principal).getUsername();
-		} else {
-			username = principal.toString();
-		}
-		List<CartModel> itemList = cartDAO.getAllItemInCartByUser(username);
-		if (itemList.size() == 0) {
-			return "redirect:/shoppingCart";
-		}
-		cartDAO.deleteAllItemsInCartByUser(username);
-		return "shoppingCartFinalize";
-	}
-
 	@RequestMapping(value = { "/order" }, method = RequestMethod.GET)
 	public String orderView(Model model, @RequestParam("id") String id) {
 		OrderModel orderModel = null;
@@ -393,11 +373,145 @@ public class SystemController {
 		} else {
 			username = principal.toString();
 		}
-		orderDAO.saveOrder(username, receiverInfoId);
+		String orderId = orderDAO.saveOrder(username, receiverInfoId);
 		Cookie cookie = new Cookie("receiverInfo", null);
 		cookie.setMaxAge(0);
 		response.addCookie(cookie);
+		Cookie cookie2 = new Cookie("orderId", orderId);
+		response.addCookie(cookie2);
 		return "redirect:/shoppingCartFinalize";
+	}
+
+	@RequestMapping(value = { "/shoppingCartFinalize" }, method = RequestMethod.GET)
+	public String shoppingCartFinalize(@CookieValue(value = "orderId", defaultValue = "") String orderId,
+			HttpServletRequest request, Model model) {
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		UserModel user = userDAO.findUserModel(username);
+//		String content = "<h3>Cảm ơn quý khách " + user.getFirstname() + " " + user.getLastname() + " đã đặt hàng tại BLAS,</h3>"
+//				+ "BLAS rất vui thông báo đơn hàng #" + orderId
+//				+ " của quý khách đã được tiếp nhận và đang trong quá trình xử lý. BLAS sẽ thông báo đến quý khách ngay khi hàng chuẩn bị được giao.</br></br>";
+		OrderModel orderModel = orderDAO.getOrderModel(orderId);
+//		content += "<h3 style=\"color:#22a2ff;\">THÔNG TIN ĐƠN HÀNG #" + orderId + "</h3>";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+	    String formatDateTime = orderModel.getOrderTime().format(formatter);
+	    ReceiverInfoModel receiverInfoModel = receiverInfoDAO.findReceiverInfoModelById(orderModel.getReceiverInfoId());
+//		content += "<h4 style=\"color:#b3bec6;\">(Thời gian đặt hàng: " + formatDateTime + ")</h4>";
+//		content += "<a href=\"localhost:8080/BlasEcommerce/order?id=" + orderId + "\">Xem chi tiết đơn hàng</a>";
+		String content = "<!DOCTYPE html>\n"
+				+ "<html>\n"
+				+ "<head>\n"
+				+ "<meta charset=\"UTF-8\">\n"
+				+ "\n"
+				+ "<link href=\"https://fonts.googleapis.com/css?family=Open+Sans:400,700\"\n"
+				+ "	rel=\"stylesheet\">\n"
+				+ "<link rel=\"stylesheet\" type=\"text/css\"\n"
+				+ "	href=\"${pageContext.request.contextPath}/styles.css\">\n"
+				+ "<style>\n"
+				+ "\n"
+				+ "body {\n"
+				+ "	background-color: #8080801a;\n"
+				+ "	font-family: 'open sans';\n"
+				+ "	overflow-x: hidden;\n"
+				+ "}\n"
+				+ ".btnDetail {\n"
+				+ "	text-decoration: none;\n"
+				+ "	background: #189fff;\n"
+				+ "	padding: 0.8em 0.8em;\n"
+				+ "	border: none;\n"
+				+ "	text-transform: UPPERCASE;\n"
+				+ "	font-weight: bold;\n"
+				+ "	color: #fff;\n"
+				+ "	-webkit-transition: background .3s ease;\n"
+				+ "	transition: background .3s ease;\n"
+				+ "}\n"
+				+ "\n"
+				+ ".btnDetail:hover {\n"
+				+ "	background: #18cfff;\n"
+				+ "	color: #fff;\n"
+				+ "	cursor: pointer;\n"
+				+ "}"
+				+ "</style>\n"
+				+ "</head>\n"
+				+ "<body>\n"
+				+ "    <div>\n"
+				+ "        <div>\n"
+				+ "            <h3>Cảm ơn quý khách " + user.getFirstname() + " " + user.getLastname() + " đã đặt hàng tại BLAS,</h3>\n"
+				+ "            <p> BLAS rất vui thông báo đơn hàng #" + orderId
+				+ "			   của quý khách đã được tiếp nhận và đang trong quá trình xử lý. BLAS sẽ thông báo đến quý khách ngay khi hàng chuẩn bị được giao.</br></br>\";</p>\n"
+				+ "        </div>\n"
+				+ "        <div>\n"
+				+ "            <div style=\"display: flex;\">\n"
+				+ "                <h3 style=\"color:#22a2ff;\">THÔNG TIN ĐƠN HÀNG #" + orderId + "</h3>"
+				+ "                <h4 style=\"color:#94a3ad;\">(Thời gian đặt hàng: " + formatDateTime + ")</h4>\n"
+				+ "            </div>\n"
+				+ "            <div style=\"margin-left: 5%;\">\n"
+				+ "                <p style=\"font-weight: bold;\">Địa chỉ giao hàng</p>\n"
+				+ "                <div>"+receiverInfoModel.getReceiverName()+"</div>\n"
+				+ "                <div>"+receiverInfoModel.getReceiverAddress()+"</div>\n"
+				+ "                <div>"+receiverInfoModel.getReceiverPhone()+"</div>\n"
+				+ "            </div>\n"
+				+ "            <div style=\"margin-top: 15px;\">Phương thức thanh toán: Thanh toán tiền mặt khi nhận hàng</div>\n"
+				+ "            <div style=\"font-style: italic;\">Lưu ý: Đối với đơn hàng đã được thanh toán trước, nhân viên giao nhận có thể yêu cầu người nhận hàng cung cấp CMND / giấy phép lái xe để chụp ảnh hoặc ghi lại thông tin.</div>\n"
+				+ "        </div>\n"
+				+ "			<div style=\"margin-top: 20px; width: 60%;margin-left: 19%;\">\n"
+				+ "            <div>\n"
+				+ "                <div\n"
+				+ "                    style=\"padding-left: 40px; padding-right: 40px; display: flex; font-weight: bold; background-color: #22a2ff; color: white;\">\n"
+				+ "                    <div style=\"width: 60%;\">Sản phẩm</div>\n"
+				+ "                    <div style=\"width: 14%;\">Giá</div>\n"
+				+ "                    <div style=\"width: 12%;\">Số lượng</div>\n"
+				+ "                    <div style=\"width: 14%;\">Tạm tính</div>\n"
+				+ "                </div>\n"
+				+ "                <div style=\"padding: 40px; padding-top: inherit; background-color: #d7e2e9;\">\n";
+		List<CartModel> itemList = cartDAO.getAllItemInCartByUser(username);
+		for(CartModel i:itemList) {
+			ProductModel productModel = productDAO.findProductModel(i.getProductId());
+			content+="<div class=\"product-preview-shopping-cart-container\"\n"
+					+ "                            style=\"display: flex;\">\n"
+					+ "                            <div style=\"width: 60%;\">\n"
+					+ productModel.getName()
+					+ "                            </div>\n"
+					+ "                            <div style=\"width: 14%;\">"+ productModel.getPrice() +"</div>\n"
+					+ "                            <div style=\"width: 12%;\">" + i.getQuantity() + "</div>\n"
+					+ "                            <div style=\"width: 14%;\">" + (i.getQuantity()*productModel.getPrice()) + "</div>\n"
+					+ "                        </div>";
+		}
+				content+= "                    <div style=\"width: 100%;margin-top: 25px; margin-left: 50%; font-weight: bold;\">TỔNG GIÁ TRỊ ĐƠN HÀNG: " + cartDAO.getTotalAmount(username) + "đ </div> \n"
+				+ "                </div>\n"
+				+ "            </div>            \n"
+				+ "        </div>\n"
+				+ "		   <div style=\"margin-top: 30px; margin-left: 40%;\">"
+				+ "            <a class=\"btnDetail\" href=\"http://localhost:8080/BlasEcommerce/order?id=" + orderId + "\">Xem chi tiết đơn hàng</a>\n"
+				+ "        </div>"
+				+ "        <div style=\"margin-top: 20px;\">\n"
+				+ "            Mọi thắc mắc và góp ý, quý khách vui lòng liên hệ với BLAS Care qua <a href=\"https://www.facebook.com/vinhdat4999/\">Facebook</a> hoặc hotline 0965 040 999. Đội ngũ BLAS Care luôn sẵn sàng hỗ trợ bạn.\n"
+				+ "        </div>\n"
+				+ "        <div style=\"font-weight: bold;\">"
+				+ "            Một lần nữa BLAS cảm ơn quý khách.\n"
+				+ "        </div>     \n"
+				+ "        <div style=\"color: #22a2ff; margin-left: 80%;font-weight: bold;\">\n"
+				+ "            <h3>BLAS</h3>\n"
+				+ "        </div> "
+				+ "    </div>\n"
+				+ "</body>\n"
+				+ "</html>";
+		String title = "Xác nhận đơn hàng #" + orderId + " BLAS\n";
+		UserModel userModel = userDAO.findUserModel(username);
+		new SendEmail().sendEmail(userModel.getEmail(), title, content);
+//		for(CartModel i:itemList) {
+//			content = ""
+//		}
+		if (itemList.size() == 0) {
+			return "redirect:/shoppingCart";
+		}
+		cartDAO.deleteAllItemsInCartByUser(username);
+		return "shoppingCartFinalize";
 	}
 
 	@RequestMapping(value = { "/signup" }, method = RequestMethod.GET)
@@ -454,7 +568,10 @@ public class SystemController {
 		Random random = new Random();
 		int code = random.nextInt(900000) + 100000;
 		authenticationDAO.save(username, code + "");
-		new SendEmail().sendEmail(userModel.getEmail(), code + "");
+		String title = "Đặt lại mật khẩu tài khoản BLAS";
+		String content = "Vui lòng không tiết lộ mã xác thực cho bất kì ai. Mã xác thực sẽ hết hạn trong 20 phút. Mã xác thực tài khoản của bạn là  : "
+				+ code + ".";
+		new SendEmail().sendEmail(userModel.getEmail(), title, content);
 		Cookie cookie = new Cookie("resetPassUsername", username);
 		response.addCookie(cookie);
 		return "redirect:/new-password";
