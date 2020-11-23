@@ -122,6 +122,7 @@ img {
   -webkit-transition: background .3s ease;
           transition: background .3s ease; }
   .add-to-cart:hover, .like:hover {
+  	cursor: pointer;
     background: #18cfff;
     color: #fff; }
 

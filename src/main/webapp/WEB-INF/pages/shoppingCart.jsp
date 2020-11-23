@@ -18,6 +18,11 @@
 
 <link rel="icon" href="${pageContext.request.contextPath}/blas.ico">
 <style>
+#btnCustom:hover{
+	background: #18cfff; 
+	cursor: pointer;
+	color: #fff;
+}
 #linkp {
 	flex-direction: column;
 	text-decoration: none;
@@ -39,6 +44,7 @@ body {
 }
 
 #btnCustom {
+	width: 30px;
 	text-decoration: none;
 	background: #ccc;
 	padding: 3px 10px;
@@ -48,8 +54,16 @@ body {
 }
 </style>
 <script type="text/javascript">
+	function Delete(productId) { 
+		window.location.href = "${pageContext.request.contextPath}/shoppingCartRemoveProduct?id=" + productId;
+	}
+	function desItem(productId) {
+		window.location.href = "${pageContext.request.contextPath}/desItem?id=" + productId;
+	}
+	function incItem(productId) {
+		window.location.href = "${pageContext.request.contextPath}/incItem?id=" + productId;
+	}
 	function update() {
-		console.log("ds");
 		document.getElementById("cartForm").submit();
 	}
 </script>
@@ -91,9 +105,8 @@ body {
 								<div style="margin-left: 30px; display: grid;">
 									<a id="linkp"
 										href="${pageContext.request.contextPath}/product?id=${item.productId}">
-										${item.productName} </a> <a style="width: 70px; height: 20px;" class="btnDelete"
-										href="${pageContext.request.contextPath}/shoppingCartRemoveProduct?id=${item.id}">Xóa
-									</a>
+										${item.productName} </a>
+										<input style="width: 70px; height: 40px;" class="btnDelete" type="button" value="Xóa" onclick="Delete('${item.id}')">
 								</div>
 							</div>
 							<div style="margin-left: auto; margin-right: 5%; display: flex;">
@@ -102,12 +115,10 @@ body {
 								<div style="font-weight: bold; margin-right: 50px;">${price}đ</div>
 								<div>
 									<div>
-										<a id="btnCustom"
-											href="${pageContext.request.contextPath}/desItem?id=${item.id}">-</a>
+										<input id="btnCustom" type="button" value="-" onclick="desItem('${item.id}')">
 										<input type="text" name="quantityItem" id="quantityItem"
-											value="${item.quantity}" onblur="update()" /> <a
-											id="btnCustom"
-											href="${pageContext.request.contextPath}/incItem?id=${item.id}">+</a>
+											value="${item.quantity}" onblur="update()" /> 
+										<input id="btnCustom" type="button" value="+" onclick="incItem('${item.id}')">
 									</div>
 								</div>
 							</div>
