@@ -175,8 +175,7 @@ li a:hover:not(.active) {
 			<ul>
 				<li><a href="${pageContext.request.contextPath}/banh">Bánh</a></li>
 				<li><a href="${pageContext.request.contextPath}/keo">Kẹo</a></li>
-				<li><a href="${pageContext.request.contextPath}/nuoc-ngot">Nước
-						ngọt</a></li>
+				<li><a href="${pageContext.request.contextPath}/nuoc-ngot">Nước	ngọt</a></li>
 			</ul>
 		</div>
 		<%
