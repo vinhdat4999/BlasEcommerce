@@ -18,7 +18,10 @@
 
 <link rel="icon" href="${pageContext.request.contextPath}/blas.ico">
 <script type="text/javascript">
-	
+	function shippingTo(id) { 
+		console.log("FF");
+		window.location.href = "${pageContext.request.contextPath}/shipping-to?receiverInfo=" + id;
+	}
 </script>
 <style>
 #linkp {
@@ -80,9 +83,9 @@ body {
 							| ${item.receiverPhone}</div>
 						<div style="margin-top: 10px; height: 95px; text-align: center;">${item.receiverAddress}</div>
 						<div style="text-align: center;">
-							<a class="btn-confirm-order"
-								href="${pageContext.request.contextPath}/shipping-to?receiverInfo=${item.id}">Giao
-								đến địa chỉ này</a>
+							<input style="width: auto;" class="btn-confirm-order"
+								type="button" value="Giao đến địa chỉ này"
+								onclick="shippingTo('${item.id}')">
 						</div>
 					</div>
 				</div>

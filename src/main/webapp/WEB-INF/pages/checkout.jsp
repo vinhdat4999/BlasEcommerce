@@ -97,7 +97,7 @@ body {
 					<div style="margin-left: 100px">Thành tiền</div>
 					<div class="total">${total}đ</div>
 				</div>
-				<div style="margin-bottom: 50px;">
+				<div style="margin-bottom: 50px; margin-top: 60px;">
 					<input type="submit" class="btn-confirm-order" value="Đặt mua">
 				</div>
 			</div>

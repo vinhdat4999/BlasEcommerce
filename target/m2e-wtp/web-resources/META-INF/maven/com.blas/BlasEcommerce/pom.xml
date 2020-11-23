@@ -26,6 +26,7 @@
 			<scope>provided</scope>
 		</dependency>
 
+
 		<!-- Jstl for jsp page -->
 		<!-- http://mvnrepository.com/artifact/javax.servlet/jstl -->
 		<dependency>
@@ -173,19 +174,21 @@
 
 	</dependencies>
 	<build>
-		<finalName>BlasEcommerce</finalName>
-        <plugins>
- 
-            <!-- Config: Maven Tomcat Plugin -->
-            <!-- http://mvnrepository.com/artifact/org.apache.tomcat.maven/tomcat7-maven-plugin -->
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat8-maven-plugin</artifactId>
-                <version>2.2</version>
-                <!-- Config: contextPath and Port (Default - /SpringMVCAnnotationShoppingCart
-                    : 8080) -->
-                <!-- <configuration> <path>/</path> <port>8899</port> </configuration> -->
-            </plugin>
-        </plugins>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.0.1</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 </project>

@@ -126,7 +126,6 @@ body {
 }
 
 .btn-confirm-order {
-	margin-top: 60px;
 	text-decoration: none;
 	background: red;
 	padding: 1em 1em;
@@ -140,6 +139,7 @@ body {
 }
 
 .btn-confirm-order:hover {
+	cursor: pointer;
 	background: #18cfff;
 	color: #fff;
 }
@@ -180,6 +180,7 @@ ul {
 
 .btnDelete:hover {
 	background: #18cfff;
+	cursor: pointer;
 	color: #fff;
 }
 
