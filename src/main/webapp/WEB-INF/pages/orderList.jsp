@@ -64,10 +64,15 @@ body {
 		</div>
 	</div>
 	<c:if test="${paginationResult.totalPages > 1}">
-		<div class="page-navigator">
+		<div class="pagination">
 			<c:forEach items="${paginationResult.navigationPages}" var="page">
 				<c:if test="${page != -1 }">
-					<a href="orderList?page=${page}" class="nav-item">${page}</a>
+					<c:if test="${page != pageNow }">
+						<a href="orderList?page=${page}" class="nav-item">${page}</a>
+					</c:if>
+					<c:if test="${page == pageNow }">
+						<a class="active" href="orderList?page=${page}" class="nav-item">${page}</a>
+					</c:if>
 				</c:if>
 				<c:if test="${page == -1 }">
 					<span class="nav-item"> ... </span>

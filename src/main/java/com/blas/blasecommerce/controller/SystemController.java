@@ -264,6 +264,7 @@ public class SystemController {
 		PaginationResult<OrderModel> paginationResult //
 				= orderDAO.listOrderModelByUser(page, MAX_RESULT, MAX_NAVIGATION_PAGE, username);
 		model.addAttribute("paginationResult", paginationResult);
+		model.addAttribute("pageNow", pageStr);
 		return "orderList";
 	}
 
