@@ -24,6 +24,11 @@ body {
 	overflow-x: hidden;
 }
 </style>
+<script type="text/javascript">
+	function placeAgain(orderId) {
+		window.location.href = "${pageContext.request.contextPath}/place-again?id=" + orderId;
+	}
+</script>
 </head>
 <body>
 
@@ -40,6 +45,9 @@ body {
 				| ${receiverInfo.receiverPhone}</div>
 			<div style="margin-top: 10px; text-align: center;">${receiverInfo.receiverAddress}</div>
 		</div>
+	</div>
+	<div style="margin-bottom: 20px;">
+		<input class="add-to-cart btn btn-default" type="button" value="Đặt lại đơn hàng này" onclick="placeAgain('${orderInfo.id}')">
 	</div>
 	<div style="width: 64%; background-color: white; margin-left: 270px;">
 		<c:forEach items="${detailList}" var="item" varStatus="varStatus">
@@ -78,7 +86,7 @@ body {
 		</c:forEach>
 		<div style="display: flex; margin-top: 50px;">
 			<div style="margin-left: 450px">Tổng cộng</div>
-			<div style="margin-left: 50px;" class="total">${total} đ</div>
+			<div style="margin-left: 50px;" class="total">${total}đ</div>
 		</div>
 	</div>
 	<c:if test="${paginationResult.totalPages > 1}">

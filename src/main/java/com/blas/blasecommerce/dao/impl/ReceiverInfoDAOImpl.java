@@ -67,10 +67,10 @@ public class ReceiverInfoDAOImpl implements ReceiverInfoDAO {
 	}
 
 	@Override
-	public void save(ReceiverInfo receiverInfo) {
+	public void save(ReceiverInfoModel receiverInfoModel) {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.getCurrentSession();
-		session.persist(receiverInfo);
+		session.persist(new ReceiverInfo(receiverInfoModel));
 	}
 
 }
