@@ -284,7 +284,7 @@ public class SystemController {
 		if (orderModel == null) {
 			return "redirect:/orderList";
 		}
-		if(!orderModel.getUsername().equals(username)) {
+		if (!orderModel.getUsername().equals(username)) {
 			return "403";
 		}
 		List<OrderDetailModel> details = orderDAO.listOrderDetailModels(id);
@@ -341,6 +341,26 @@ public class SystemController {
 		return "shipping";
 	}
 
+	@RequestMapping(value = { "/shipping" }, method = RequestMethod.POST)
+	public String createReceiverInfo(HttpServletRequest request, HttpServletResponse response,
+			Model model, @ModelAttribute("receiverInfo") @Validated ReceiverInfoModel receiverInfoModel) {
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		String id = UUID.randomUUID().toString();
+		ReceiverInfoModel receiverInfoModel2 = new ReceiverInfoModel(id, username, receiverInfoModel.getReceiverName(),
+				receiverInfoModel.getReceiverPhone(), receiverInfoModel.getReceiverEmail(),
+				receiverInfoModel.getReceiverAddress());
+		receiverInfoDAO.save(receiverInfoModel2);
+		Cookie cookie = new Cookie("receiverInfo", id);
+		response.addCookie(cookie);
+		return "redirect:/cart";
+	}
+
 	@RequestMapping(value = { "/shipping-to" }, method = RequestMethod.GET)
 	public String changeReceiverInfo(HttpServletRequest request, HttpServletResponse response, Model model,
 			@RequestParam(value = "receiverInfo", defaultValue = "") String receiverInfoId) {
@@ -352,7 +372,7 @@ public class SystemController {
 			username = principal.toString();
 		}
 		ReceiverInfoModel receiverInfoModel = receiverInfoDAO.findReceiverInfoModelById(receiverInfoId);
-		if(!receiverInfoModel.getUsername().equals(username)) {
+		if (!receiverInfoModel.getUsername().equals(username)) {
 			return "redirect:/shipping";
 		}
 		Cookie cookie = new Cookie("receiverInfo", receiverInfoId);
@@ -400,8 +420,8 @@ public class SystemController {
 	@RequestMapping(value = { "/shoppingCartFinalize" }, method = RequestMethod.GET)
 	public String shoppingCartFinalize(@CookieValue(value = "orderId", defaultValue = "") String orderId,
 			HttpServletRequest request, Model model, HttpServletResponse response) {
-		if(orderId==null || orderId.equals("")) {
-			return "redirect:/";	
+		if (orderId == null || orderId.equals("")) {
+			return "redirect:/";
 		}
 		String username = "";
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -413,106 +433,63 @@ public class SystemController {
 		UserModel user = userDAO.findUserModel(username);
 		OrderModel orderModel = orderDAO.getOrderModel(orderId);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-	    String formatDateTime = orderModel.getOrderTime().format(formatter);
-	    ReceiverInfoModel receiverInfoModel = receiverInfoDAO.findReceiverInfoModelById(orderModel.getReceiverInfoId());
-	    String content = "<!DOCTYPE html>\n"
-				+ "<html>\n"
-				+ "<head>\n"
-				+ "<meta charset=\"UTF-8\">\n"
-				+ "\n"
+		String formatDateTime = orderModel.getOrderTime().format(formatter);
+		ReceiverInfoModel receiverInfoModel = receiverInfoDAO.findReceiverInfoModelById(orderModel.getReceiverInfoId());
+		String content = "<!DOCTYPE html>\n" + "<html>\n" + "<head>\n" + "<meta charset=\"UTF-8\">\n" + "\n"
 				+ "<link href=\"https://fonts.googleapis.com/css?family=Open+Sans:400,700\"\n"
-				+ "	rel=\"stylesheet\">\n"
-				+ "<link rel=\"stylesheet\" type=\"text/css\"\n"
-				+ "	href=\"${pageContext.request.contextPath}/styles.css\">\n"
-				+ "<style>\n"
-				+ "\n"
-				+ "body {\n"
-				+ "	background-color: #8080801a;\n"
-				+ "	font-family: 'open sans';\n"
-				+ "	overflow-x: hidden;\n"
-				+ "}\n"
-				+ ".btnDetail {\n"
-				+ "	text-decoration: none;\n"
-				+ "	background: #189fff;\n"
-				+ "	padding: 0.8em 0.8em;\n"
-				+ "	border: none;\n"
-				+ "	text-transform: UPPERCASE;\n"
-				+ "	font-weight: bold;\n"
-				+ "	color: #fff;\n"
-				+ "	-webkit-transition: background .3s ease;\n"
-				+ "	transition: background .3s ease;\n"
-				+ "}\n"
-				+ "\n"
-				+ ".btnDetail:hover {\n"
-				+ "	background: #18cfff;\n"
-				+ "	color: #fff;\n"
-				+ "	cursor: pointer;\n"
-				+ "}"
-				+ "</style>\n"
-				+ "</head>\n"
-				+ "<body>\n"
-				+ "    <div>\n"
-				+ "        <div>\n"
-				+ "            <h3>Cảm ơn quý khách " + user.getFirstname() + " " + user.getLastname() + " đã đặt hàng tại BLAS,</h3>\n"
+				+ "	rel=\"stylesheet\">\n" + "<link rel=\"stylesheet\" type=\"text/css\"\n"
+				+ "	href=\"${pageContext.request.contextPath}/styles.css\">\n" + "<style>\n" + "\n" + "body {\n"
+				+ "	background-color: #8080801a;\n" + "	font-family: 'open sans';\n" + "	overflow-x: hidden;\n"
+				+ "}\n" + ".btnDetail {\n" + "	text-decoration: none;\n" + "	background: #189fff;\n"
+				+ "	padding: 0.8em 0.8em;\n" + "	border: none;\n" + "	text-transform: UPPERCASE;\n"
+				+ "	font-weight: bold;\n" + "	color: #fff;\n" + "	-webkit-transition: background .3s ease;\n"
+				+ "	transition: background .3s ease;\n" + "}\n" + "\n" + ".btnDetail:hover {\n"
+				+ "	background: #18cfff;\n" + "	color: #fff;\n" + "	cursor: pointer;\n" + "}" + "</style>\n"
+				+ "</head>\n" + "<body>\n" + "    <div>\n" + "        <div>\n" + "            <h3>Cảm ơn quý khách "
+				+ user.getFirstname() + " " + user.getLastname() + " đã đặt hàng tại BLAS,</h3>\n"
 				+ "            <p> BLAS rất vui thông báo đơn hàng #" + orderId
 				+ "			   của quý khách đã được tiếp nhận và đang trong quá trình xử lý. BLAS sẽ thông báo đến quý khách ngay khi hàng chuẩn bị được giao.</br></br></p>\n"
-				+ "        </div>\n"
-				+ "        <div>\n"
-				+ "            <div style=\"display: flex;\">\n"
+				+ "        </div>\n" + "        <div>\n" + "            <div style=\"display: flex;\">\n"
 				+ "                <h3 style=\"color:#22a2ff;\">THÔNG TIN ĐƠN HÀNG #" + orderId + "</h3>"
-				+ "                <h4 style=\"color:#94a3ad; margin-left: 10px;\">(Thời gian đặt hàng: " + formatDateTime + ")</h4>\n"
-				+ "            </div>\n"
+				+ "                <h4 style=\"color:#94a3ad; margin-left: 10px;\">(Thời gian đặt hàng: "
+				+ formatDateTime + ")</h4>\n" + "            </div>\n"
 				+ "            <div style=\"margin-left: 5%;\">\n"
-				+ "                <p style=\"font-weight: bold;\">Địa chỉ giao hàng</p>\n"
-				+ "                <div>"+receiverInfoModel.getReceiverName()+"</div>\n"
-				+ "                <div>"+receiverInfoModel.getReceiverAddress()+"</div>\n"
-				+ "                <div>"+receiverInfoModel.getReceiverPhone()+"</div>\n"
-				+ "            </div>\n"
+				+ "                <p style=\"font-weight: bold;\">Địa chỉ giao hàng</p>\n" + "                <div>"
+				+ receiverInfoModel.getReceiverName() + "</div>\n" + "                <div>"
+				+ receiverInfoModel.getReceiverAddress() + "</div>\n" + "                <div>"
+				+ receiverInfoModel.getReceiverPhone() + "</div>\n" + "            </div>\n"
 				+ "            <div style=\"margin-top: 15px;\">Phương thức thanh toán: Thanh toán tiền mặt khi nhận hàng</div>\n"
 				+ "            <div style=\"font-style: italic;\">Lưu ý: Đối với đơn hàng đã được thanh toán trước, nhân viên giao nhận có thể yêu cầu người nhận hàng cung cấp CMND / giấy phép lái xe để chụp ảnh hoặc ghi lại thông tin.</div>\n"
-				+ "        </div>\n"
-				+ "			<div style=\"margin-top: 20px; width: 60%;margin-left: 19%;\">\n"
-				+ "            <div>\n"
-				+ "                <div\n"
+				+ "        </div>\n" + "			<div style=\"margin-top: 20px; width: 60%;margin-left: 19%;\">\n"
+				+ "            <div>\n" + "                <div\n"
 				+ "                    style=\"padding-left: 40px; padding-right: 40px; display: flex; font-weight: bold; background-color: #22a2ff; color: white;\">\n"
 				+ "                    <div style=\"width: 60%;\">Sản phẩm</div>\n"
 				+ "                    <div style=\"width: 14%;\">Giá</div>\n"
 				+ "                    <div style=\"width: 12%;\">Số lượng</div>\n"
-				+ "                    <div style=\"width: 14%;\">Tạm tính</div>\n"
-				+ "                </div>\n"
+				+ "                    <div style=\"width: 14%;\">Tạm tính</div>\n" + "                </div>\n"
 				+ "                <div style=\"padding: 40px; padding-top: inherit; background-color: #d7e2e9;\">\n";
 		List<CartModel> itemList = cartDAO.getAllItemInCartByUser(username);
-		for(CartModel i:itemList) {
+		for (CartModel i : itemList) {
 			ProductModel productModel = productDAO.findProductModel(i.getProductId());
-			content+="<div class=\"product-preview-shopping-cart-container\"\n"
+			content += "<div class=\"product-preview-shopping-cart-container\"\n"
 					+ "                            style=\"display: flex;\">\n"
-					+ "                            <div style=\"width: 60%;\">\n"
-					+ productModel.getName()
-					+ "                            </div>\n"
-					+ "                            <div style=\"width: 14%;\">"+ productModel.getPrice() +"</div>\n"
-					+ "                            <div style=\"width: 12%;\">" + i.getQuantity() + "</div>\n"
-					+ "                            <div style=\"width: 14%;\">" + (i.getQuantity()*productModel.getPrice()) + "</div>\n"
-					+ "                        </div>";
+					+ "                            <div style=\"width: 60%;\">\n" + productModel.getName()
+					+ "                            </div>\n" + "                            <div style=\"width: 14%;\">"
+					+ productModel.getPrice() + "</div>\n" + "                            <div style=\"width: 12%;\">"
+					+ i.getQuantity() + "</div>\n" + "                            <div style=\"width: 14%;\">"
+					+ (i.getQuantity() * productModel.getPrice()) + "</div>\n" + "                        </div>";
 		}
-				content+= "                    <div style=\"width: 100%;margin-top: 25px; margin-left: 50%; font-weight: bold;\">TỔNG GIÁ TRỊ ĐƠN HÀNG: " + cartDAO.getTotalAmount(username) + "đ </div> \n"
-				+ "                </div>\n"
-				+ "            </div>            \n"
-				+ "        </div>\n"
+		content += "                    <div style=\"width: 100%;margin-top: 25px; margin-left: 50%; font-weight: bold;\">TỔNG GIÁ TRỊ ĐƠN HÀNG: "
+				+ cartDAO.getTotalAmount(username) + "đ </div> \n" + "                </div>\n"
+				+ "            </div>            \n" + "        </div>\n"
 				+ "		   <div style=\"margin-top: 30px; margin-left: 40%;\">"
-				+ "            <a class=\"btnDetail\" href=\"http://localhost:8080/BlasEcommerce/order?id=" + orderId + "\">Xem chi tiết đơn hàng</a>\n"
-				+ "        </div>"
-				+ "        <div style=\"margin-top: 20px;\">\n"
+				+ "            <a class=\"btnDetail\" href=\"http://localhost:8080/BlasEcommerce/order?id=" + orderId
+				+ "\">Xem chi tiết đơn hàng</a>\n" + "        </div>" + "        <div style=\"margin-top: 20px;\">\n"
 				+ "            Mọi thắc mắc và góp ý, quý khách vui lòng liên hệ với BLAS Care qua <a href=\"https://www.facebook.com/vinhdat4999/\">Facebook</a> hoặc hotline 0965 040 999. Đội ngũ BLAS Care luôn sẵn sàng hỗ trợ bạn.\n"
-				+ "        </div>\n"
-				+ "        <div style=\"font-weight: bold;\">"
-				+ "            Một lần nữa BLAS cảm ơn quý khách.\n"
-				+ "        </div>     \n"
+				+ "        </div>\n" + "        <div style=\"font-weight: bold;\">"
+				+ "            Một lần nữa BLAS cảm ơn quý khách.\n" + "        </div>     \n"
 				+ "        <div style=\"color: #22a2ff; margin-left: 80%;font-weight: bold;\">\n"
-				+ "            <h3>BLAS</h3>\n"
-				+ "        </div> "
-				+ "    </div>\n"
-				+ "</body>\n"
-				+ "</html>";
+				+ "            <h3>BLAS</h3>\n" + "        </div> " + "    </div>\n" + "</body>\n" + "</html>";
 		String title = "Xác nhận đơn hàng #" + orderId + " BLAS\n";
 		UserModel userModel = userDAO.findUserModel(username);
 		new SendEmail().sendEmail(userModel.getEmail(), title, content);
@@ -524,6 +501,28 @@ public class SystemController {
 		}
 		cartDAO.deleteAllItemsInCartByUser(username);
 		return "shoppingCartFinalize";
+	}
+
+	@RequestMapping(value = { "/place-again" }, method = RequestMethod.GET)
+	public String placeAgain(HttpServletRequest request, HttpServletResponse response, Model model,
+			@RequestParam(value = "id", defaultValue = "") String orderId) {
+		OrderModel orderModel = orderDAO.getOrderModel(orderId);
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		if (!username.equals(orderModel.getUsername())) {
+			return "redirect:/";
+		}
+		List<OrderDetailModel> list = orderDAO.listOrderDetailModels(orderId);
+		cartDAO.deleteAllItemsInCartByUser(username);
+		for (OrderDetailModel i : list) {
+			cartDAO.updateItemInCart(i.getProductId(), i.getQuantity(), orderModel.getUsername());
+		}
+		return "redirect:/cart";
 	}
 
 	@RequestMapping(value = { "/signup" }, method = RequestMethod.GET)

@@ -10,6 +10,6 @@ public interface ReceiverInfoDAO {
 	public ReceiverInfoModel findReceiverInfoModelById(String id);
 	public ReceiverInfoModel findReceiverInfoModelByUsername(String username);
 	public PaginationResult<ReceiverInfoModel> queryReceiverInfos(int page, int maxResult, int maxNavigationPage, String username);
-	public void save(ReceiverInfo receiverInfo);
+	public void save(ReceiverInfoModel receiverInfoModel);
 	
 }

@@ -18,12 +18,26 @@
 
 <link rel="icon" href="${pageContext.request.contextPath}/blas.ico">
 <script type="text/javascript">
-	function shippingTo(id) { 
+	function shippingTo(id) {
 		console.log("FF");
-		window.location.href = "${pageContext.request.contextPath}/shipping-to?receiverInfo=" + id;
+		window.location.href = "${pageContext.request.contextPath}/shipping-to?receiverInfo="
+				+ id;
 	}
 </script>
 <style>
+input[type=text] {
+	width: 300px;
+}
+
+.row {
+	display: flex;
+	margin: 10px;
+}
+
+.row>div {
+	width: 150px;
+}
+
 #linkp {
 	flex-direction: column;
 	text-decoration: none;
@@ -73,8 +87,7 @@ body {
 
 	<fmt:setLocale value="en_US" scope="session" />
 
-
-	<form>
+	<form:form modelAttribute="receiverInfo" method="POST" action="${pageContext.request.contextPath}/shipping">
 		<div style="padding: 30px;">
 			<c:forEach items="${paginationReceiverInfos.list}" var="item">
 				<div class="reveiver-info-container">
@@ -91,19 +104,41 @@ body {
 				</div>
 			</c:forEach>
 		</div>
-		<!-- <div style="display: flex;">
-			<div>Bạn muốn giao hàng đến địa chỉ khác?</div>
-			<div>
-				<input type="button" class="button" value="Thêm địa chỉ" onclick="addReceiverInfo()">
-				<div class="content">
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-						sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-						Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-						nisi ut aliquip ex ea commodo consequat.</p>
+		<div>
+			<div>Bạn muốn giao đến địa chỉ mới?</div>
+			<div style="margin: auto; width: 38%; margin-top: 15px;">
+				<div>
+					<div class="row">
+						<div>Họ tên</div>
+						<div>
+							<input type="text" id="receiverName" name="receiverName">
+						</div>
+					</div>
+					<div class="row">
+						<div>SĐT</div>
+						<div>
+							<input type="text" id="receiverPhone" name="receiverPhone">
+						</div>
+					</div>
+					<div class="row">
+						<div>Email</div>
+						<div>
+							<input type="text" id="receiverEmail" name="receiverEmail">
+						</div>
+					</div>
+					<div class="row">
+						<div>Địa chỉ</div>
+						<div>
+							<input type="text" id="receiverAddress" name="receiverAddress">
+						</div>
+					</div>
+				</div>
+				<div>
+					<input type="submit" class="btn-confirm-order" value="Giao đến địa chỉ này">
 				</div>
 			</div>
-		</div> -->
-	</form>
+		</div>
+	</form:form>
 
 
 	<jsp:include page="_footer.jsp" />

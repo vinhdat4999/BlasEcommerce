@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.authorizeRequests()
 				.antMatchers("/product", "/orderList", "/order", "/accountInfo", "/cart", "/checkout", "/desItem",
-						"/incItem", "/shoppingCartRemoveProduct", "/shipping", "/shipping-to")//
+						"/incItem", "/shoppingCartRemoveProduct", "/shipping", "/shipping-to", "/place-again")//
 				.access("hasAnyRole('ROLE_ADMIN', 'ROLE_CUSTOMER')");
 
 		http.authorizeRequests().antMatchers("/editProduct", "/createProduct", "/delete-image", "/delete-product")

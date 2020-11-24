@@ -65,20 +65,22 @@ body {
 	</div>
 	<c:if test="${paginationResult.totalPages > 1}">
 		<div class="pagination">
-			<c:forEach items="${paginationResult.navigationPages}" var="page">
-				<c:if test="${page != -1 }">
-					<c:if test="${page != pageNow }">
-						<a href="orderList?page=${page}" class="nav-item">${page}</a>
+			<div style="display: flex;">
+				<c:forEach items="${paginationResult.navigationPages}" var="page">
+					<c:if test="${page != -1 }">
+						<c:if test="${page != pageNow }">
+							<a href="orderList?page=${page}" class="nav-item">${page}</a>
+						</c:if>
+						<c:if test="${page == pageNow }">
+							<a class="active" href="orderList?page=${page}" class="nav-item">${page}</a>
+						</c:if>
 					</c:if>
-					<c:if test="${page == pageNow }">
-						<a class="active" href="orderList?page=${page}" class="nav-item">${page}</a>
+					<c:if test="${page == -1 }">
+						<!-- <span class="nav-item"> ... </span> -->
+						<div class="nav-item" style="margin: 5px;">...</div>
 					</c:if>
-				</c:if>
-				<c:if test="${page == -1 }">
-					<span class="nav-item"> ... </span>
-				</c:if>
-			</c:forEach>
-
+				</c:forEach>
+			</div>
 		</div>
 	</c:if>
 	<jsp:include page="_footer.jsp" />
