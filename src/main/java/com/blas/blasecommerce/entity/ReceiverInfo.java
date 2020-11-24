@@ -20,13 +20,14 @@ public class ReceiverInfo implements Serializable {
 	private String receiverPhone;
 	private String receiverEmail;
 	private String receiverAddress;
+	private boolean active;
 
 	public ReceiverInfo() {
 		super();
 	}
 
 	public ReceiverInfo(String id, String username, String receiverName, String receiverPhone, String receiverEmail,
-			String receiverAddress) {
+			String receiverAddress, boolean active) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -34,6 +35,7 @@ public class ReceiverInfo implements Serializable {
 		this.receiverPhone = receiverPhone;
 		this.receiverEmail = receiverEmail;
 		this.receiverAddress = receiverAddress;
+		this.active = active;
 	}
 
 	public ReceiverInfo(ReceiverInfoModel receiverInfoModel) {
@@ -43,6 +45,7 @@ public class ReceiverInfo implements Serializable {
 		this.receiverPhone = receiverInfoModel.getReceiverPhone();
 		this.receiverEmail = receiverInfoModel.getReceiverEmail();
 		this.receiverAddress = receiverInfoModel.getReceiverAddress();
+		this.active = receiverInfoModel.isActive();
 	}
 
 	@Id
@@ -100,11 +103,20 @@ public class ReceiverInfo implements Serializable {
 		this.receiverAddress = receiverAddress;
 	}
 
+	@Column(name = "active", nullable = false)
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 	@Override
 	public String toString() {
 		return "ReceiverInfo [id=" + id + ", username=" + username + ", receiverName=" + receiverName
 				+ ", receiverPhone=" + receiverPhone + ", receiverEmail=" + receiverEmail + ", receiverAddress="
-				+ receiverAddress + "]";
+				+ receiverAddress + ", active=" + active + "]";
 	}
 
 }

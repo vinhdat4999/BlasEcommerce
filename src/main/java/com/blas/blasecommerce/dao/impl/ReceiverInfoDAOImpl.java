@@ -2,11 +2,12 @@ package com.blas.blasecommerce.dao.impl;
 
 import java.util.List;
 
-
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,11 +46,14 @@ public class ReceiverInfoDAOImpl implements ReceiverInfoDAO {
 	public ReceiverInfoModel findReceiverInfoModelByUsername(String username) {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.getCurrentSession();
-		Criteria queryCriteria = session.createCriteria(ReceiverInfo.class);
-		queryCriteria.add(Restrictions.eq("username", username));
-		queryCriteria.setFirstResult(0);
-		queryCriteria.setMaxResults(1);
-		List<ReceiverInfo> list =  queryCriteria.list();
+		Criteria criteria = session.createCriteria(ReceiverInfo.class);
+		Criterion usernameCrit = Restrictions.eq("username", username);
+		Criterion activeCrit = Restrictions.eq("active", true);
+		LogicalExpression andExp = Restrictions.and(usernameCrit, activeCrit);
+		criteria.add(andExp);
+		criteria.setFirstResult(0);
+		criteria.setMaxResults(1);
+		List<ReceiverInfo> list = criteria.list();
 		return new ReceiverInfoModel(list.get(0));
 	}
 
@@ -59,8 +63,8 @@ public class ReceiverInfoDAOImpl implements ReceiverInfoDAO {
 		// TODO Auto-generated method stub
 
 		String sql = "select new " + ReceiverInfoModel.class.getName()
-				+ "(r.id, r.username, r.receiverName, r.receiverPhone, r.receiverEmail, r.receiverAddress) from "
-				+ ReceiverInfo.class.getName() + " r where r.username = '" + username + "'";
+				+ "(r.id, r.username, r.receiverName, r.receiverPhone, r.receiverEmail, r.receiverAddress, r.active) from "
+				+ ReceiverInfo.class.getName() + " r where r.username = '" + username + "' and active=1";
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery(sql);
 		return new PaginationResult<ReceiverInfoModel>(query, page, maxResult, maxNavigationPage);
@@ -71,6 +75,15 @@ public class ReceiverInfoDAOImpl implements ReceiverInfoDAO {
 		// TODO Auto-generated method stub
 		Session session = sessionFactory.getCurrentSession();
 		session.persist(new ReceiverInfo(receiverInfoModel));
+	}
+
+	@Override
+	public void delete(String receiverInfoId) {
+		// TODO Auto-generated method stub
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE " + ReceiverInfo.class.getName() + " set active = 0 WHERE id = '" + receiverInfoId + "'";
+		Query query = session.createQuery(hql);
+		query.executeUpdate();
 	}
 
 }

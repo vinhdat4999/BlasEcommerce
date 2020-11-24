@@ -18,10 +18,11 @@
 
 <link rel="icon" href="${pageContext.request.contextPath}/blas.ico">
 <script type="text/javascript">
+	function deleteReceiver(id) {
+		window.location.href = "${pageContext.request.contextPath}/delete-receiver?receiverInfo=" + id;
+	}
 	function shippingTo(id) {
-		console.log("FF");
-		window.location.href = "${pageContext.request.contextPath}/shipping-to?receiverInfo="
-				+ id;
+		window.location.href = "${pageContext.request.contextPath}/shipping-to?receiverInfo=" + id;
 	}
 </script>
 <style>
@@ -96,9 +97,11 @@ body {
 							| ${item.receiverPhone}</div>
 						<div style="margin-top: 10px; height: 95px; text-align: center;">${item.receiverAddress}</div>
 						<div style="text-align: center;">
-							<input style="width: auto;" class="btn-confirm-order"
+							<input style="width: auto;" class="btn-shipping-here"
 								type="button" value="Giao đến địa chỉ này"
 								onclick="shippingTo('${item.id}')">
+							<input type="button" class="btn-confirm-order" value="Xóa"
+								onclick="deleteReceiver('${item.id}')">
 						</div>
 					</div>
 				</div>
@@ -134,7 +137,7 @@ body {
 					</div>
 				</div>
 				<div>
-					<input type="submit" class="btn-confirm-order" value="Giao đến địa chỉ này">
+					<input type="submit" class="btn-shipping-here" value="Giao đến địa chỉ này">
 				</div>
 			</div>
 		</div>
