@@ -22,7 +22,7 @@ public class SendEmail {
 
         final int TSL_PORT = 587; // Port for TLS/STARTTLS
 
-        final String APP_EMAIL = "blascoffeevn@gmail.com"; // your email
+        final String APP_EMAIL = "blasecommerce@gmail.com"; // your email
 
         final String APP_PASSWORD = "0546550566Qq"; // your password
         String RECEIVE_EMAIL = email;

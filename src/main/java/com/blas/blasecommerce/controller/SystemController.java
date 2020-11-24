@@ -269,12 +269,22 @@ public class SystemController {
 
 	@RequestMapping(value = { "/order" }, method = RequestMethod.GET)
 	public String orderView(Model model, @RequestParam("id") String id) {
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
 		OrderModel orderModel = null;
 		if (id != null) {
 			orderModel = this.orderDAO.getOrderModel(id);
 		}
 		if (orderModel == null) {
 			return "redirect:/orderList";
+		}
+		if(!orderModel.getUsername().equals(username)) {
+			return "403";
 		}
 		List<OrderDetailModel> details = orderDAO.listOrderDetailModels(id);
 		for (OrderDetailModel i : details) {
@@ -285,13 +295,6 @@ public class SystemController {
 			return "redirect:/orderList";
 		}
 		ReceiverInfoModel receiverInfoModel = receiverInfoDAO.findReceiverInfoModelById(orderModel.getReceiverInfoId());
-		String username = "";
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof UserDetails) {
-			username = ((UserDetails) principal).getUsername();
-		} else {
-			username = principal.toString();
-		}
 		double total = orderModel.getTotal();
 		String totalStr = String.format("%,d", (int) total);
 		model.addAttribute("receiverInfo", receiverInfoModel);
@@ -340,6 +343,17 @@ public class SystemController {
 	@RequestMapping(value = { "/shipping-to" }, method = RequestMethod.GET)
 	public String changeReceiverInfo(HttpServletRequest request, HttpServletResponse response, Model model,
 			@RequestParam(value = "receiverInfo", defaultValue = "") String receiverInfoId) {
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		ReceiverInfoModel receiverInfoModel = receiverInfoDAO.findReceiverInfoModelById(receiverInfoId);
+		if(!receiverInfoModel.getUsername().equals(username)) {
+			return "redirect:/shipping";
+		}
 		Cookie cookie = new Cookie("receiverInfo", receiverInfoId);
 		response.addCookie(cookie);
 		return "redirect:/cart";
@@ -384,7 +398,10 @@ public class SystemController {
 
 	@RequestMapping(value = { "/shoppingCartFinalize" }, method = RequestMethod.GET)
 	public String shoppingCartFinalize(@CookieValue(value = "orderId", defaultValue = "") String orderId,
-			HttpServletRequest request, Model model) {
+			HttpServletRequest request, Model model, HttpServletResponse response) {
+		if(orderId==null || orderId.equals("")) {
+			return "redirect:/";	
+		}
 		String username = "";
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof UserDetails) {
@@ -393,17 +410,11 @@ public class SystemController {
 			username = principal.toString();
 		}
 		UserModel user = userDAO.findUserModel(username);
-//		String content = "<h3>Cảm ơn quý khách " + user.getFirstname() + " " + user.getLastname() + " đã đặt hàng tại BLAS,</h3>"
-//				+ "BLAS rất vui thông báo đơn hàng #" + orderId
-//				+ " của quý khách đã được tiếp nhận và đang trong quá trình xử lý. BLAS sẽ thông báo đến quý khách ngay khi hàng chuẩn bị được giao.</br></br>";
 		OrderModel orderModel = orderDAO.getOrderModel(orderId);
-//		content += "<h3 style=\"color:#22a2ff;\">THÔNG TIN ĐƠN HÀNG #" + orderId + "</h3>";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 	    String formatDateTime = orderModel.getOrderTime().format(formatter);
 	    ReceiverInfoModel receiverInfoModel = receiverInfoDAO.findReceiverInfoModelById(orderModel.getReceiverInfoId());
-//		content += "<h4 style=\"color:#b3bec6;\">(Thời gian đặt hàng: " + formatDateTime + ")</h4>";
-//		content += "<a href=\"localhost:8080/BlasEcommerce/order?id=" + orderId + "\">Xem chi tiết đơn hàng</a>";
-		String content = "<!DOCTYPE html>\n"
+	    String content = "<!DOCTYPE html>\n"
 				+ "<html>\n"
 				+ "<head>\n"
 				+ "<meta charset=\"UTF-8\">\n"
@@ -443,12 +454,12 @@ public class SystemController {
 				+ "        <div>\n"
 				+ "            <h3>Cảm ơn quý khách " + user.getFirstname() + " " + user.getLastname() + " đã đặt hàng tại BLAS,</h3>\n"
 				+ "            <p> BLAS rất vui thông báo đơn hàng #" + orderId
-				+ "			   của quý khách đã được tiếp nhận và đang trong quá trình xử lý. BLAS sẽ thông báo đến quý khách ngay khi hàng chuẩn bị được giao.</br></br>\";</p>\n"
+				+ "			   của quý khách đã được tiếp nhận và đang trong quá trình xử lý. BLAS sẽ thông báo đến quý khách ngay khi hàng chuẩn bị được giao.</br></br></p>\n"
 				+ "        </div>\n"
 				+ "        <div>\n"
 				+ "            <div style=\"display: flex;\">\n"
 				+ "                <h3 style=\"color:#22a2ff;\">THÔNG TIN ĐƠN HÀNG #" + orderId + "</h3>"
-				+ "                <h4 style=\"color:#94a3ad;\">(Thời gian đặt hàng: " + formatDateTime + ")</h4>\n"
+				+ "                <h4 style=\"color:#94a3ad; margin-left: 10px;\">(Thời gian đặt hàng: " + formatDateTime + ")</h4>\n"
 				+ "            </div>\n"
 				+ "            <div style=\"margin-left: 5%;\">\n"
 				+ "                <p style=\"font-weight: bold;\">Địa chỉ giao hàng</p>\n"
@@ -504,9 +515,9 @@ public class SystemController {
 		String title = "Xác nhận đơn hàng #" + orderId + " BLAS\n";
 		UserModel userModel = userDAO.findUserModel(username);
 		new SendEmail().sendEmail(userModel.getEmail(), title, content);
-//		for(CartModel i:itemList) {
-//			content = ""
-//		}
+		Cookie cookie = new Cookie("orderId", null);
+		cookie.setMaxAge(0);
+		response.addCookie(cookie);
 		if (itemList.size() == 0) {
 			return "redirect:/shoppingCart";
 		}
@@ -568,8 +579,8 @@ public class SystemController {
 		Random random = new Random();
 		int code = random.nextInt(900000) + 100000;
 		authenticationDAO.save(username, code + "");
-		String title = "Đặt lại mật khẩu tài khoản BLAS";
-		String content = "Vui lòng không tiết lộ mã xác thực cho bất kì ai. Mã xác thực sẽ hết hạn trong 20 phút. Mã xác thực tài khoản của bạn là  : "
+		String title = "Ä�áº·t láº¡i máº­t kháº©u tÃ i khoáº£n BLAS";
+		String content = "Vui lÃ²ng khÃ´ng tiáº¿t lá»™ mÃ£ xÃ¡c thá»±c cho báº¥t kÃ¬ ai. MÃ£ xÃ¡c thá»±c sáº½ háº¿t háº¡n trong 20 phÃºt. MÃ£ xÃ¡c thá»±c tÃ i khoáº£n cá»§a báº¡n lÃ Â  : "
 				+ code + ".";
 		new SendEmail().sendEmail(userModel.getEmail(), title, content);
 		Cookie cookie = new Cookie("resetPassUsername", username);
