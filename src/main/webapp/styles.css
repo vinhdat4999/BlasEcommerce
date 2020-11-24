@@ -144,6 +144,25 @@ body {
 	color: #fff;
 }
 
+.btn-shipping-here {
+	text-decoration: none;
+	background: #189fff;
+	padding: 1em 1em;
+	border: none;
+	text-transform: UPPERCASE;
+	font-weight: bold;
+	color: #fff;
+	-webkit-transition: background .3s ease;
+	transition: background .3s ease;
+	text-align: center;
+}
+
+.btn-shipping-here:hover {
+	background: #18cfff;
+	color: #fff;
+	cursor: pointer;
+}
+
 .product-preview-shopping-cart-container:hover {
 	box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 20px;
 	z-index: 1;

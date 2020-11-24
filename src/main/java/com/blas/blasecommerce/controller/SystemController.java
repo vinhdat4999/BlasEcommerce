@@ -342,8 +342,8 @@ public class SystemController {
 	}
 
 	@RequestMapping(value = { "/shipping" }, method = RequestMethod.POST)
-	public String createReceiverInfo(HttpServletRequest request, HttpServletResponse response,
-			Model model, @ModelAttribute("receiverInfo") @Validated ReceiverInfoModel receiverInfoModel) {
+	public String createReceiverInfo(HttpServletRequest request, HttpServletResponse response, Model model,
+			@ModelAttribute("receiverInfo") @Validated ReceiverInfoModel receiverInfoModel) {
 		String username = "";
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof UserDetails) {
@@ -354,7 +354,7 @@ public class SystemController {
 		String id = UUID.randomUUID().toString();
 		ReceiverInfoModel receiverInfoModel2 = new ReceiverInfoModel(id, username, receiverInfoModel.getReceiverName(),
 				receiverInfoModel.getReceiverPhone(), receiverInfoModel.getReceiverEmail(),
-				receiverInfoModel.getReceiverAddress());
+				receiverInfoModel.getReceiverAddress(),true);
 		receiverInfoDAO.save(receiverInfoModel2);
 		Cookie cookie = new Cookie("receiverInfo", id);
 		response.addCookie(cookie);
@@ -377,6 +377,32 @@ public class SystemController {
 		}
 		Cookie cookie = new Cookie("receiverInfo", receiverInfoId);
 		response.addCookie(cookie);
+		return "redirect:/cart";
+	}
+
+	@RequestMapping(value = { "/delete-receiver" }, method = RequestMethod.GET)
+	public String deleteReceiver(HttpServletRequest request, HttpServletResponse response, Model model,
+			@RequestParam(value = "receiverInfo", defaultValue = "") String receiverInfoId,
+			@CookieValue(value = "receiverInfo", defaultValue = "") String receiverInfoIdCookie) {
+		String username = "";
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		ReceiverInfoModel receiverInfoModel = receiverInfoDAO.findReceiverInfoModelById(receiverInfoId);
+		if (!receiverInfoModel.getUsername().equals(username)) {
+			return "redirect:/";
+		}
+		if(receiverInfoIdCookie!=null && !receiverInfoIdCookie.equals("")) {
+			if(receiverInfoIdCookie.equals(receiverInfoId)) {
+				Cookie cookie = new Cookie("receiverInfo", null);
+				cookie.setMaxAge(0);
+				response.addCookie(cookie);
+			}
+		}
+		receiverInfoDAO.delete(receiverInfoId);
 		return "redirect:/cart";
 	}
 
@@ -560,7 +586,7 @@ public class SystemController {
 		String address = request.getParameter("address");
 		ReceiverInfoModel receiverInfoModel = new ReceiverInfoModel(UUID.randomUUID().toString(),
 				userModel.getUsername(), userModel.getFirstname() + " " + userModel.getLastname(),
-				userModel.getPhoneNum(), userModel.getEmail(), address);
+				userModel.getPhoneNum(), userModel.getEmail(), address, true);
 
 		userDAO.saveUser(user, new ReceiverInfo(receiverInfoModel));
 		return "redirect:/login";

@@ -9,13 +9,14 @@ public class ReceiverInfoModel {
 	private String receiverPhone;
 	private String receiverEmail;
 	private String receiverAddress;
+	private boolean active;
 
 	public ReceiverInfoModel() {
 		super();
 	}
 
 	public ReceiverInfoModel(String id, String username, String receiverName, String receiverPhone,
-			String receiverEmail, String receiverAddress) {
+			String receiverEmail, String receiverAddress, boolean active) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -23,6 +24,7 @@ public class ReceiverInfoModel {
 		this.receiverPhone = receiverPhone;
 		this.receiverEmail = receiverEmail;
 		this.receiverAddress = receiverAddress;
+		this.active = active;
 	}
 
 	public ReceiverInfoModel(ReceiverInfo receiverInfo) {
@@ -32,6 +34,7 @@ public class ReceiverInfoModel {
 		this.receiverPhone = receiverInfo.getReceiverPhone();
 		this.receiverEmail = receiverInfo.getReceiverEmail();
 		this.receiverAddress = receiverInfo.getReceiverAddress();
+		this.active = receiverInfo.isActive();
 	}
 
 	public String getId() {
@@ -82,11 +85,19 @@ public class ReceiverInfoModel {
 		this.receiverAddress = receiverAddress;
 	}
 
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
 	@Override
 	public String toString() {
 		return "ReceiverInfoModel [id=" + id + ", username=" + username + ", receiverName=" + receiverName
 				+ ", receiverPhone=" + receiverPhone + ", receiverEmail=" + receiverEmail + ", receiverAddress="
-				+ receiverAddress + "]";
+				+ receiverAddress + ", active=" + active + "]";
 	}
 
 }
